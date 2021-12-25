@@ -1,0 +1,142 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form [formGroup]="clusterForm"  (ngSubmit)="onSubmit(clusterForm)" class="form-horizontal" >
+                        <div class="card-header card-header-warning card-header-text">
+                            <div class="card-text">
+                                <h4 class="card-title">Clusters</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">Cluster Id</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="id" formControlName="id" name="id" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Cluster Name</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="name" formControlName="name" name="name" required>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="clusterForm.controls.name.touched && clusterForm.controls.name.invalid">
+                                        <span *ngIf="clusterForm.controls.name.errors?.required">This field is mandatory</span>
+                                    </mat-error>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Amount</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="number" matInput formControlName="amount">
+                                    </mat-form-field>
+                                    <mat-error *ngIf="clusterForm.controls.amount.touched && clusterForm.controls.amount.invalid">
+                                        <span *ngIf="clusterForm.controls.amount.errors?.required">This field is mandatory</span>
+                                        <span *ngIf="clusterForm.controls.amount.errors?.pattern">Amount must be a valid Number.</span>
+                                    </mat-error>
+                                </div>
+                                <label *ngIf="editMode" class="col-sm-2 col-form-label">Balance</label>
+                                <div *ngIf="editMode" class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="balance" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">Created On</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label" >
+                                        <input type="text" name="denomination" matInput formControlName="createdDate" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Created By</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label" >
+                                        <input type="text" matInput formControlName="createdBy" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="editMode && activated">
+                                <label class="col-sm-2 col-form-label">Activated On</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label" >
+                                        <input type="text" matInput formControlName="activationDate" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Activated By</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label" >
+                                        <input type="text" matInput formControlName="activatedBy" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Description</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <textarea matInput formControlName="description" required></textarea>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="clusterForm.controls.description.touched && clusterForm.controls.description.invalid">
+                                        <span *ngIf="clusterForm.controls.description.errors?.required">This field is mandatory</span>
+                                    </mat-error>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="card-footer text-center d-flex" style="justify-content: flex-start" *ngIf="editMode">
+                            <button *ngIf="!activated"
+                                    type="button"
+                                    (click)="onActivate()"
+                                    mat-raised-button
+                                    class="btn btn-info btn-fill text-sm-right mr-2"
+                                    style="align-content: flex-end">Activate
+                            </button>
+                            <button *ngIf="!suspended; else unsuspend"
+                                    type="button"
+                                    (click)="onSuspend()"
+                                    mat-raised-button
+                                    class="btn btn-info btn-fill text-sm-right ml-2"
+                                    style="align-content: flex-end">Suspend
+                            </button>
+                        </div>
+
+                        <div class="card-footer text-center d-flex" style="justify-content: flex-end" *ngIf="editMode; else savetemplate">
+                            <button mat-raised-button type="submit" class="btn btn-warning btn-fill text-sm-right" style="align-content: flex-end">Update Cluster</button>
+                        </div>
+
+                        <ng-template #savetemplate>
+                            <div class="card-footer text-center d-flex" style="justify-content: flex-end">
+                                <button mat-raised-button type="submit" class="btn btn-warning btn-fill">Save Cluster</button>
+                            </div>
+                        </ng-template>
+
+                        <ng-template #unsuspend>
+                            <button (click)="onUnsuspend()"
+                                    type="button"
+                                    mat-raised-button
+                                    class="btn btn-info btn-fill text-sm-right ml-2"
+                                    style="align-content: flex-end">Un-Suspend
+                            </button>
+                        </ng-template>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

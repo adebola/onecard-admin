@@ -1,0 +1,67 @@
+<div class="main-content">
+    <div class="loader" *ngIf="busy">
+        <mat-progress-spinner [color]="'primary'" class="loading" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="container-fluid">
+        <div class="row">prima
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">summarize</i>
+                        </div>
+                        <h4 class="card-title">Reports</h4>
+                    </div>
+                    <div class="card-body">
+                        <mat-form-field style="max-width: 300px;">
+                            <input  matInput placeholder="Search Reports" #input>
+                        </mat-form-field>
+
+                        <div class="table-responsive">
+                            <mat-table matSort matSortDirection="asc" [dataSource]="datasource" *ngIf="!(datasource.loading$ | async); else loading">
+
+
+                                <ng-container matColumnDef="id">
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef >Id</mat-header-cell>
+                                    <mat-cell *matCellDef="let report">{{report.id}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="name">
+                                    <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                                    <mat-cell *matCellDef="let report">{{report.reportName}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="file">
+                                    <mat-header-cell *matHeaderCellDef>File</mat-header-cell>
+                                    <mat-cell *matCellDef="let report">{{report.reportFile}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="run">
+                                    <mat-header-cell *matHeaderCellDef>Run</mat-header-cell>
+                                    <mat-cell mat-cell *matCellDef="let report" class="td-actions text-right">
+                                        <i class="material-icons" style="color: #4CAF50; cursor: pointer;" (click)="onRun(report.id)">play_arrow</i>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                            </mat-table>
+
+                            <mat-paginator #paginator
+                                           [length]="datasource.totalSize"
+                                           [pageIndex]="datasource.page"
+                                           [pageSize]="datasource.pageSize"
+                                           [pageSizeOptions]="[20, 40, 60, 80, 100]"
+                                           (page)="logEvent($event)"
+                            >
+                            </mat-paginator>
+                            <ng-template #loading>
+                                Loading Please Wait...
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

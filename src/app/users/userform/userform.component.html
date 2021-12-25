@@ -1,0 +1,216 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)" class="form-horizontal">
+                        <div class="card-header card-header-warning card-header-text">
+                            <div class="card-text">
+                                <h4 class="card-title">Users</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">User Id</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="userId" formControlName="userId" name="userId"
+                                               readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">UserName</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="text" name="username" matInput formControlName="username" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">E-Mail</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="email" name="count" matInput formControlName="email" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">FirstName</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="text" name="firstname" matInput formControlName="firstname">
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">LastName</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="text" name="lastname" matInput formControlName="lastname">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <ng-container *ngIf="editMode">
+                                    <label class="col-sm-2 col-form-label">Created On</label>
+                                    <div class="col-sm-4">
+                                        <mat-form-field class="example-full-width has-label">
+                                            <input type="text" matInput formControlName="createdon" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                </ng-container>
+                                <div class="col-sm-3">
+                                    <mat-checkbox formControlName="enabled" class="mt-3">Enabled</mat-checkbox>
+                                </div>
+                                <div class="col-sm-3">
+                                    <mat-checkbox formControlName="emailverified" class="mt-3" disabled>E-Mail
+                                        Verified
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <ng-container *ngIf="editMode">
+                                    <label class="col-sm-2 col-form-label">Account Balance</label>
+                                    <div class="col-sm-4">
+                                        <mat-form-field class="example-full-width has-label">
+                                            <input type="text" matInput formControlName="balance" readonly>
+                                        </mat-form-field>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="card-footer text-center">
+                                    <button mat-raised-button class="btn btn-warning btn-fill text-sm-right" type="button" (click)="onShowTransaction()">
+                                        {{showTransactions ? 'Hide Transactions' : 'Show Transactions'}}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card-footer text-center d-flex" style="justify-content: flex-end"
+                                     *ngIf="editMode; else savetemplate">
+                                    <button mat-raised-button type="submit" class="btn btn-warning btn-fill text-sm-right"
+                                            style="align-content: flex-end">Update User
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-template #savetemplate>
+                            <div class="card-footer text-center d-flex" style="justify-content: flex-end">
+                                <button mat-raised-button type="submit" class="btn btn-warning btn-fill">Create User
+                                </button>
+                            </div>
+                        </ng-template>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="showTransactions">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning card-header-text mb-4">
+                        <div class="card-text">
+                            <h4 class="card-title">User Transactions</h4>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <mat-table matSort matSortDirection="asc" [dataSource]="datasource" *ngIf="!(datasource.loading$ | async); else loading">
+                                <ng-container matColumnDef="id">
+                                    <mat-header-cell *matHeaderCellDef>TxID</mat-header-cell>
+                                    <mat-cell *matCellDef="let transaction">{{transaction.id}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="counterparty">
+                                    <mat-header-cell *matHeaderCellDef>CounterParty</mat-header-cell>
+                                    <mat-cell *matCellDef="let transaction">{{transaction.counterpartyName}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="date">
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef >TxDate</mat-header-cell>
+                                    <mat-cell *matCellDef="let transaction">{{transaction.txDate | date}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="service">
+                                    <mat-header-cell *matHeaderCellDef>Service</mat-header-cell>
+                                    <mat-cell *matCellDef="let transaction">{{transaction.serviceName}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="amount">
+                                    <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+                                    <mat-cell *matCellDef="let transaction">{{transaction.txAmount | currency: "₦":"symbol":"1.0-0"}}</mat-cell>
+                                </ng-container>
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                            </mat-table>
+                            <mat-paginator #paginator
+                                           [length]="datasource.totalSize"
+                                           [pageIndex]="datasource.page"
+                                           [pageSize]="datasource.pageSize"
+                                           [pageSizeOptions]="[20, 40, 60, 80, 100]"
+                                           (page)="logEvent($event)"
+                            >
+                            </mat-paginator>
+                            <ng-template #loading>
+                                Loading Please Wait
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning card-header-text mb-4">
+                        <div class="card-text">
+                            <h4 class="card-title">User Roles</h4>
+                        </div>
+                    </div>
+                    <div class="row mx-2">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+                            <h4>Available Roles</h4>
+                            <mat-selection-list #availableroles>
+                                <mat-list-option *ngFor="let role of allRoles$ | async"
+                                                 [value]="role.id">{{role.name}}</mat-list-option>
+                            </mat-selection-list>
+                        </div>
+
+                        <div class="col-md-5">
+                            <h4>Assigned Roles</h4>
+                            <mat-selection-list #assignedroles>
+                                <mat-list-option *ngFor="let role of assignedRoles$ | async"
+                                                 [value]="role.id">{{role.name}}</mat-list-option>
+                            </mat-selection-list>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row mx-2">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-5">
+                            <button mat-raised-button type="button" class="btn btn-warning btn-fill text-sm-right my-3" (click)="addRoles()">
+                                Add Selected <mat-icon> arrow_forward_ios</mat-icon>
+                            </button>
+                        </div>
+                        <div class="col-md-5">
+                            <button mat-raised-button type="button" class="btn btn-warning btn-fill text-sm-right my-3" (click)="removeRoles()">
+                                <mat-icon> arrow_back_ios</mat-icon>Remove Selected
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

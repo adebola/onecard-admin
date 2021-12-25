@@ -1,0 +1,47 @@
+<div class="row" *ngIf="datasource">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <mat-table matSort matSortDirection="asc" [dataSource]="datasource"
+                               *ngIf="!(datasource.loading$ | async); else loading">
+                        <ng-container matColumnDef="id">
+                            <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+                            <mat-cell *matCellDef="let recharge">{{recharge.id}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="name">
+                            <mat-header-cell mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                            <mat-cell *matCellDef="let recharge">{{recharge.name}}</mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="code">
+                            <mat-header-cell mat-header-cell *matHeaderCellDef>Code</mat-header-cell>
+                            <mat-cell *matCellDef="let recharge">{{recharge.code}}</mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="dislayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: dislayedColumns"
+                                 [ngClass]="{'highlight': selectedRowIndex == row.id}"
+                                 (click)="highlight(row)">
+                        </mat-row>
+                    </mat-table>
+
+                    <ng-template #loading>
+                        Loading Please Wait...
+                    </ng-template>
+                </div>
+            </div>
+            <div class="card-footer d-flex" style="justify-content: end;">
+                <button mat-raised-button type="button"
+                        class="btn btn-success btn-fill mr-2" (click)="addProvider()">
+                    Add
+                </button>
+                <button mat-raised-button type="button"
+                        class="btn btn-danger btn-fill" (click)="removeProvider()">
+                    Remove
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

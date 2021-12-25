@@ -1,0 +1,7 @@
+.mat-selection-list {
+    border: solid 1px #000000;
+}
+
+.mat-column-id {
+    max-width: 100px;
+}

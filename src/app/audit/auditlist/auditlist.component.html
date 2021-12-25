@@ -1,0 +1,64 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">person_search</i>
+                        </div>
+                        <h4 class="card-title">Audit</h4>
+                    </div>
+                    <div class="card-body">
+                        <mat-form-field style="max-width: 300px;">
+                            <input  matInput placeholder="Search Audit Actions" #input>
+                        </mat-form-field>
+
+                        <div class="table-responsive">
+                            <mat-table matSort matSortDirection="asc" [dataSource]="datasource" *ngIf="!(datasource.loading$ | async); else loading">
+
+
+                                <ng-container matColumnDef="user">
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef >User</mat-header-cell>
+                                    <mat-cell *matCellDef="let audit">{{audit.userName}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="action">
+                                    <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                                    <mat-cell *matCellDef="let audit">{{audit.serviceAction}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="date">
+                                    <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+                                    <mat-cell *matCellDef="let audit">{{audit.createdDate | date}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="view">
+                                    <mat-header-cell *matHeaderCellDef>View</mat-header-cell>
+                                    <mat-cell mat-cell *matCellDef="let audit" class="td-actions text-right">
+                                        <i class="material-icons" style="color: #4CAF50; cursor: pointer;" (click)="onView(audit.id)">slideshow</i>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                            </mat-table>
+
+                            <mat-paginator #paginator
+                                           [length]="datasource.totalSize"
+                                           [pageIndex]="datasource.page"
+                                           [pageSize]="datasource.pageSize"
+                                           [pageSizeOptions]="[20, 40, 60, 80, 100]"
+                                           (page)="logEvent($event)"
+                            >
+                            </mat-paginator>
+                            <ng-template #loading>
+                                Loading Please Wait...
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

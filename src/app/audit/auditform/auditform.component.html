@@ -1,0 +1,71 @@
+
+<div class="main-content">
+    <div class="card ">
+        <div class="card-header card-header-warning card-header-text">
+            <div class="card-text">
+                <h4 class="card-title">Audit Details</h4>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container form-horizontal" *ngIf="(audit$ | async) as audit; else loading">
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Id</label>
+                    <div class="col-sm-10">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" matInput class="form-control" [value]="audit.id" readonly/>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Service</label>
+                    <div class="col-sm-4">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" matInput class="form-control" [value]="audit.serviceName" readonly/>
+                        </mat-form-field>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Action</label>
+                    <div class="col-sm-4">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" matInput class="form-control" [value]="audit.serviceAction" readonly/>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">User</label>
+                    <div class="col-sm-4">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" matInput class="form-control" [value]="audit.userName" disabled/>
+                        </mat-form-field>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Date</label>
+                    <div class="col-sm-4">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" matInput class="form-control"
+                                   [value]="audit.createdDate | date" disabled/>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Narrative</label>
+                    <div class="col-10">
+                        <textarea matInput readonly>{{audit.description}}</textarea>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex" style="justify-content: flex-end">
+                    <button mat-raised-button (click)="back()"
+                            class="btn btn-warning btn-fill text-sm-right"
+                            style="align-content: flex-end" >Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #loading>
+        Loading Please Wait...
+    </ng-template>
+</div>

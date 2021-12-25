@@ -1,0 +1,298 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <mat-tab-group animationDuration="500ms" (selectedTabChange)="tabSelectedChange($event)">
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <mat-icon class="example-tab-icon">business</mat-icon>
+                                General
+                            </ng-template>
+                            <form [formGroup]="providerForm" (ngSubmit)="onSubmit(providerForm)"
+                                  class="form-horizontal">
+                                <div class="card-body">
+
+                                    <div class="row" *ngIf="editMode">
+                                        <label class="col-sm-2 col-form-label">Provider Id</label>
+                                        <div class="col-sm-10">
+                                            <mat-form-field class="example-full-width has-label">
+                                                <input type="text" matInput id="batchId"
+                                                       formControlName="providerId"
+                                                       name="providerId" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <label class="col-sm-2 col-form-label">Name</label>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width has-label">
+                                                <input type="text" matInput formControlName="name">
+                                            </mat-form-field>
+                                            <mat-error
+                                                    *ngIf="providerForm.controls.name.touched && providerForm.controls.name.invalid">
+                                                <span *ngIf="providerForm.controls.name.errors.required">This field is mandatory.</span>
+                                            </mat-error>
+                                        </div>
+                                        <label class="col-sm-2 col-form-label">Category</label>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width has-label">
+                                                <mat-select placeholder="Provider Category" name="category"
+                                                            formControlName="category" id="category">
+                                                    <mat-option
+                                                            *ngFor="let category of providerService.categories$ | async"
+                                                            [value]="category.categoryName">
+                                                        {{ category.categoryName }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="providerForm.controls.category.invalid">
+                                                    <span *ngIf="providerForm.controls.category.errors.required">Please select a Provider Category.</span>
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <label class="col-sm-2 col-form-label">Code</label>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width has-label">
+                                                <input type="text" matInput formControlName="code">
+                                            </mat-form-field>
+                                            <mat-error
+                                                    *ngIf="providerForm.controls.code.touched && providerForm.controls.code.invalid">
+                                                <span *ngIf="providerForm.controls.code.errors.required">This field is mandatory.</span>
+                                            </mat-error>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" *ngIf="editMode">
+                                        <label class="col-sm-2 col-form-label">CreatedBy</label>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width has-label">
+                                                <input type="text" matInput formControlName="createdby" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                        <label class="col-sm-2 col-form-label">Creation Date</label>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="example-full-width has-label">
+                                                <input type="text" matInput formControlName="createdon" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <div class="row" *ngIf="editMode && activated">
+                                        <label class="col-sm-2 col-form-label">Activated By</label>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="has-label">
+                                                <input type="text" matInput formControlName="activatedBy" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                        <label class="col-sm-2 col-form-label">Activated On</label>
+                                        <div class="col-sm-4">
+                                            <mat-form-field class="has-label">
+                                                <input type="text" matInput formControlName="activationDate" readonly>
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer text-center d-flex" style="justify-content: flex-start"
+                                     *ngIf="editMode">
+                                    <button *ngIf="!activated"
+                                            type="button"
+                                            (click)="onActivate()"
+                                            mat-raised-button
+                                            class="btn btn-info btn-fill text-sm-right mr-2"
+                                            style="align-content: flex-end">Activate
+                                    </button>
+                                    <button *ngIf="!suspended; else unsuspend"
+                                            type="button"
+                                            (click)="onSuspend()"
+                                            mat-raised-button
+                                            class="btn btn-info btn-fill text-sm-right ml-2"
+                                            style="align-content: flex-end">Suspend
+                                    </button>
+                                </div>
+
+                                <div class="card-footer text-center d-flex" style="justify-content: flex-end"
+                                     *ngIf="editMode; else savetemplate">
+                                    <button mat-raised-button type="submit"
+                                            class="btn btn-warning btn-fill text-sm-right"
+                                            style="align-content: flex-end">Update Provider
+                                    </button>
+                                </div>
+
+                                <ng-template #savetemplate>
+                                    <div class="card-footer text-center d-flex" style="justify-content: flex-end">
+                                        <button mat-raised-button type="submit" class="btn btn-warning btn-fill">
+                                            Save
+                                            Provider
+                                        </button>
+                                    </div>
+                                </ng-template>
+
+                                <ng-template #unsuspend>
+                                    <button (click)="onUnsuspend()"
+                                            type="button"
+                                            mat-raised-button
+                                            class="btn btn-info btn-fill text-sm-right ml-2"
+                                            style="align-content: flex-end">Un-Suspend
+                                    </button>
+                                </ng-template>
+                            </form>
+                        </mat-tab>
+                        <mat-tab *ngIf="editMode">
+                            <ng-template mat-tab-label>
+                                <mat-icon class="example-tab-icon">miscellaneous_services</mat-icon>
+                                Services
+                            </ng-template>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <mat-form-field style="max-width: 300px;">
+                                            <input matInput placeholder="Search Services" #input>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button mat-raised-button (click)="createNewActionForm()"
+                                                class="btn btn-warning btn-fill text-right float-right">New Service
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive" *ngIf="datasource; else loading">
+                                    <mat-table matSort matSortDirection="asc" [dataSource]="datasource"
+                                               *ngIf="!(datasource.loading$ | async); else loading">
+                                        <ng-container matColumnDef="id">
+                                            <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+                                            <mat-cell *matCellDef="let service">{{service.id}}</mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="name">
+                                            <mat-header-cell mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                                            <mat-cell *matCellDef="let service">{{service.serviceName}}</mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="price">
+                                            <mat-header-cell mat-header-cell *matHeaderCellDef>Price</mat-header-cell>
+                                            <mat-cell *matCellDef="let service">{{service.serviceCost}}</mat-cell>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="action">
+                                            <mat-header-cell mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+                                            <mat-cell *matCellDef="let service">{{service.actionName}}</mat-cell>
+                                        </ng-container>
+
+                                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                        <mat-row *matRowDef="let row; columns: displayedColumns"
+                                                 [ngClass]="{'highlight': selectedRowIndex == row.id}"
+                                                 (click)="highlight(row)"></mat-row>
+                                    </mat-table>
+
+                                    <mat-paginator #paginator
+                                                   [length]="datasource.totalSize"
+                                                   [pageIndex]="datasource.page"
+                                                   [pageSize]="datasource.pageSize"
+                                                   [pageSizeOptions]="[20, 40, 60, 80, 100]"
+                                                   (page)="logEvent($event)"
+                                    >
+                                    </mat-paginator>
+                                </div>
+                                <ng-template #loading>
+                                    Loading Please Wait...
+                                </ng-template>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+
+<!--        <app-provider-details *ngIf="actionDisplay"-->
+<!--                              [actionId]="action.id"-->
+<!--                              [providerCode]="action.providerCode">-->
+<!--        </app-provider-details>-->
+
+        <div class="row" *ngIf="actionDisplay">
+            <div class="col-md-12">
+                <div class="card">
+                    <form [formGroup]="actionForm" (ngSubmit)="actionSubmit(actionForm)" class="form-horizontal">
+                        <div class="card-body">
+                            <div class="row" *ngIf="actionEditMode">
+                                <label class="col-sm-2 col-form-label">Service Id</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="serviceId"
+                                               formControlName="serviceId"
+                                               name="serviceId" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Service Name</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="name">
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Service Code</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="code">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Service Cost</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="number" matInput formControlName="cost">
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Service Type</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <mat-select placeholder="Service Type" formControlName="action">
+                                            <mat-option
+                                                    *ngFor="let action of providerService.actions$ | async"
+                                                    [value]="action.action">
+                                                {{ action.action }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="providerForm.controls.category.invalid">
+                                            <span *ngIf="providerForm.controls.category.errors.required">Please select a Provider Category.</span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+
+                            <div class="card-footer d-flex" style="justify-content: space-between">
+                                <button mat-raised-button type="button" (click)="onRechargeProviders()"
+                                        class="btn btn-info btn-fill">
+                                    Recharge Providers
+                                </button>
+
+                                <button id="submit" mat-raised-button type="submit"
+                                        class="btn btn-warning btn-fill text-sm-right"
+                                        style="align-content: flex-end" #button>Save Service
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <app-provider-details *ngIf="rechargeDisplay" [serviceId]="selectedRowIndex"></app-provider-details>
+
+        <div class="row" >
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,182 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form [formGroup]="voucherForm" (ngSubmit)="onSubmit(voucherForm)" class="form-horizontal">
+                        <div class="card-header card-header-warning card-header-text">
+                            <div class="card-text">
+                                <h4 class="card-title">Vouchers</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">Batch Id</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="batchId" formControlName="batchId"
+                                               name="batchId" readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <label class="col-sm-2 col-form-label">Cluster</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="cluster" formControlName="cluster"
+                                               name="cluster" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Denomination</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="number" name="denomination" number="true" matInput
+                                               formControlName="denomination" min="1">
+                                    </mat-form-field>
+                                    <mat-error *ngIf="voucherForm.controls.denomination.touched && voucherForm.controls.denomination.invalid">
+                                        <span *ngIf="voucherForm.controls.denomination.errors.required">Please enter Voucher Denomination.</span>
+                                    </mat-error>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Count</label>
+                                <div class="col-sm-4" *ngIf="editMode else editcount">
+                                    <mat-form-field class="has-label">
+                                        <input type="number" name="count" number="true" matInput formControlName="count" readonly>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="voucherForm.controls.count.touched && voucherForm.controls.count.invalid">
+                                        <span *ngIf="voucherForm.controls.count.errors.required">Please enter a positive number for Voucher Count!.</span>
+                                    </mat-error>
+                                </div>
+                            </div>
+
+                            <div *ngIf="!editMode" class="row">
+                                <label class="col-sm-2 col-form-label">Cluster</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <mat-select placeholder="Select Cluster" formControlName="selectcluster">
+                                            <mat-option
+                                                    *ngFor="let cluster of clusters$ | async"
+                                                    [value]="cluster.id">
+                                                {{ cluster.name + ' (' + (cluster.balance | currency: "₦":"symbol":"1.0-0") + ')'}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="voucherForm.controls.selectcluster.invalid">
+                                            <span *ngIf="voucherForm.controls.selectcluster.errors.required">Please select a Cluster.</span>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">Created On</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="createdon" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Created By</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="createdby" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="editMode && (activated$ | async)">
+                                <label class="col-sm-2 col-form-label">Activated On</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="text" matInput formControlName="activationDate" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Activated By</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="text" matInput formControlName="activatedBy" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">Expires On</label>
+                                <div class="col-sm-5">
+                                    <mat-form-field>
+                                        <input matInput [matDatepicker]="expirypicker"
+                                               placeholder="Choose Expiry Date" (click)="expirypicker.open()"
+                                               formControlName="expiryDate" [(ngModel)]="expiryDate" #expirydate/>
+                                        <mat-datepicker-toggle matSuffix [for]="expirypicker"></mat-datepicker-toggle>
+                                        <mat-datepicker #expirypicker></mat-datepicker>
+                                    </mat-form-field>
+
+                                </div>
+                                <div class="col-ms-4" *ngIf="editMode">
+                                    <button mat-raised-button type="button" class="btn btn-outline-warning"
+                                            (click)="downloadFile()">Export Excel File
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-center d-flex" style="justify-content: flex-start"
+                             *ngIf="editMode">
+                            <button *ngIf="!(activated$ | async)"
+                                    type="button"
+                                    (click)="onActivate()"
+                                    mat-raised-button
+                                    class="btn btn-info btn-fill text-sm-right mr-2"
+                                    style="align-content: flex-end">Activate
+                            </button>
+                            <button *ngIf="!(suspended$ | async); else unsuspend"
+                                    type="button"
+                                    (click)="onSuspend()"
+                                    mat-raised-button
+                                    class="btn btn-info btn-fill text-sm-right ml-2"
+                                    style="align-content: flex-end">Suspend
+                            </button>
+                        </div>
+
+                        <div class="card-footer text-center d-flex" style="justify-content: flex-end"
+                             *ngIf="editMode; else savetemplate">
+                            <button mat-raised-button type="submit" class="btn btn-warning btn-fill text-sm-right"
+                                    style="align-content: flex-end">Update Vouchers
+                            </button>
+                        </div>
+
+                        <ng-template #savetemplate>
+                            <div class="card-footer text-center d-flex" style="justify-content: flex-end">
+                                <button mat-raised-button type="submit" class="btn btn-warning btn-fill">Generate
+                                    Vouchers
+                                </button>
+                            </div>
+                        </ng-template>
+
+                        <ng-template #unsuspend>
+                            <button (click)="onUnsuspend()"
+                                    type="button"
+                                    mat-raised-button
+                                    class="btn btn-info btn-fill text-sm-right ml-2"
+                                    style="align-content: flex-end">Un-Suspend
+                            </button>
+                        </ng-template>
+
+                        <ng-template #editcount>
+                            <div class="col-sm-4">
+                                <mat-form-field class="has-label">
+                                    <input type="number" name="count" number="true" matInput formControlName="count" required min="1">
+                                </mat-form-field>
+                                <mat-error *ngIf="voucherForm.controls.count.touched && voucherForm.controls.count.invalid">
+                                    <span *ngIf="voucherForm.controls.count.errors.required">Please enter a positive number for Voucher Count!.</span>
+                                </mat-error>
+                            </div>
+                        </ng-template>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

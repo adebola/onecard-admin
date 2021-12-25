@@ -1,0 +1,73 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit(categoryForm)" class="form-horizontal">
+                        <div class="card-header card-header-warning card-header-text">
+                            <div class="card-text">
+                                <h4 class="card-title">Category</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">Category Id</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="categoryId" formControlName="categoryId"
+                                               name="categoryId" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Category Name</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="name">
+                                    </mat-form-field>
+                                    <mat-error *ngIf="categoryForm.controls.name.touched && categoryForm.controls.name.invalid">
+                                        <span *ngIf="categoryForm.controls.name.errors.required">This field is mandatory.</span>
+                                    </mat-error>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">Created By</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="createdby" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Creation Date</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="createdon" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-center d-flex" style="justify-content: flex-end"
+                             *ngIf="editMode; else savetemplate">
+                            <button mat-raised-button type="submit" class="btn btn-warning btn-fill text-sm-right"
+                                    style="align-content: flex-end">Update Category
+                            </button>
+                        </div>
+
+                        <ng-template #savetemplate>
+                            <div class="card-footer text-center d-flex" style="justify-content: flex-end">
+                                <button mat-raised-button type="submit" class="btn btn-warning btn-fill">Save
+                                    Category
+                                </button>
+                            </div>
+                        </ng-template>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

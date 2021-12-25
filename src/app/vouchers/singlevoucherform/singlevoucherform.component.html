@@ -1,0 +1,114 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form [formGroup]="voucherForm"  (ngSubmit)="onSubmit(voucherForm)" class="form-horizontal" >
+                        <div class="card-header card-header-warning card-header-text">
+                            <div class="card-text">
+                                <h4 class="card-title">Edit Voucher</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Voucher Id</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="voucherId" formControlName="voucherId" name="vouvcherId" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Batch Id</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="batchId" formControlName="batchId" name="batchId" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Created On</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="createdon" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Created By</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="createdby" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row" *ngIf="activated">
+                                <label class="col-sm-2 col-form-label">Activated On</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="activatedon" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Activated By</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="activatedby" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Denomination</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label" >
+                                        <input type="text" name="denomination" matInput formControlName="denomination" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Serial Number</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label" >
+                                        <input type="text"  matInput formControlName="serialNumber" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Expires On</label>
+                                <div class="col-sm-5">
+                                    <mat-form-field>
+                                        <input type="text"  matInput formControlName="expiryDate" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-center d-flex" style="justify-content: flex-end" >
+                            <button mat-raised-button type="submit" class="btn btn-warning btn-fill text-sm-right" style="align-content: flex-end">OK</button>
+                        </div>
+
+                        <div class="card-footer text-center d-flex" style="justify-content: flex-start" >
+                            <button *ngIf="!suspended; else unsuspend"
+                                    type="button"
+                                    (click)="onSuspend()"
+                                    mat-raised-button
+                                    class="btn btn-info btn-fill text-sm-right ml-2"
+                                    style="align-content: flex-end">Suspend
+                            </button>
+                        </div>
+
+                        <ng-template #unsuspend>
+                            <button (click)="onUnsuspend()"
+                                    type="button"
+                                    mat-raised-button
+                                    class="btn btn-info btn-fill text-sm-right ml-2"
+                                    style="align-content: flex-end">Un-Suspend
+                            </button>
+                        </ng-template>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

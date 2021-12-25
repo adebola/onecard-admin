@@ -1,0 +1,71 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">credit_score</i>
+                        </div>
+                        <h4 class="card-title">Vouchers</h4>
+                    </div>
+                    <div class="card-body">
+                        <mat-form-field style="max-width: 300px;">
+                            <input  matInput placeholder="Search Vouchers" #input>
+                        </mat-form-field>
+
+                        <div class="table-responsive">
+
+                            <mat-table matSort matSortDirection="asc" [dataSource]="datasource" *ngIf="!(datasource.loading$ | async); else loading">
+
+                                <ng-container matColumnDef="id">
+                                    <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+                                    <mat-cell *matCellDef="let voucher">{{voucher.id}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="serialNumber">
+                                    <mat-header-cell *matHeaderCellDef>Serial No</mat-header-cell>
+                                    <mat-cell *matCellDef="let voucher">{{voucher.serialNumber}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="denomination">
+                                    <mat-header-cell *matHeaderCellDef>Denomination</mat-header-cell>
+                                    <mat-cell *matCellDef="let voucher">{{voucher.denomination |  currency: "₦":"symbol":"1.0-0"}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="expiryDate">
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef >Expires On</mat-header-cell>
+                                    <mat-cell *matCellDef="let voucher">{{voucher.expiryDate | date}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="actions">
+                                    <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+                                    <mat-cell mat-cell *matCellDef="let voucher" class="td-actions text-right">
+                                        <i class="material-icons" style="color: #4CAF50; cursor: pointer;" (click)="onView(voucher.id)">
+                                            <span matTooltip="View / Edit Voucher">  wysiwyg </span>
+                                        </i>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                            </mat-table>
+
+                            <mat-paginator #paginator
+                                           [length]="datasource.totalSize"
+                                           [pageIndex]="datasource.page"
+                                           [pageSize]="datasource.pageSize"
+                                           [pageSizeOptions]="[20, 40, 60, 80, 100]"
+                                           (page)="logEvent($event)"
+                            >
+                            </mat-paginator>
+                            <ng-template #loading>
+                                Loading Please Wait...
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
