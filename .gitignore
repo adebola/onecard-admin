@@ -1,7 +1,7 @@
 # Logs
 logs
 *.log
-npm-debug.log*
+npm-debug.log*git
 yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
@@ -11,7 +11,7 @@ firebase-debug.*.log*
 .firebase/
 
 # Generated Compiled
-dist
+dist/
 
 # Firebase config
 
