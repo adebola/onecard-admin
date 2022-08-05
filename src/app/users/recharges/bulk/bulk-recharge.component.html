@@ -1,0 +1,74 @@
+<div class="mx-0 px-0">
+    <div class="card-body">
+        <div class="row">
+            <label class="col-md-2 col-form-label">Search By</label>
+            <div class="col-md-4" style="max-width: 150px;">
+                <mat-form-field>
+                    <mat-select (selectionChange)="onBulkChange($event)">
+                        <mat-option *ngFor="let search of searchBulkOptions" [value]="search">
+                            {{search}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6" *ngIf="searchBulkById">
+                <mat-form-field style="max-width: 300px;">
+                    <input matInput placeholder="Search By Id" #byBulkId>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field class="col-md-6" *ngIf="searchBulkByDate">
+                <input matInput [matDatepicker]="bulkPicker"
+                       (dateChange)="bulkValueChange($event)"
+                       placeholder="Choose Recharge Date" (click)="bulkPicker.open()"
+                       [(ngModel)]="bulkRechargeDate" #bulkrechargedate/>
+                <mat-datepicker-toggle matSuffix [for]="bulkPicker"></mat-datepicker-toggle>
+                <mat-datepicker #bulkPicker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div class="table-responsive" *ngIf="bulkDataSource; else loading"
+             style="border: 1px solid orange">
+            <mat-table matSort matSortDirection="asc" [dataSource]="bulkDataSource"
+                       *ngIf="!(bulkDataSource.loading$ | async); else loading">
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+                    <mat-cell *matCellDef="let bulk">{{bulk.id}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="servicecost">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Cost</mat-header-cell>
+                    <mat-cell
+                            *matCellDef="let bulk">{{bulk.totalServiceCost | currency: "₦":"symbol":"1.0-0"}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="date">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+                    <mat-cell *matCellDef="let bulk">{{bulk.createdAt | date}}</mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="bulkColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: bulkColumns"
+                         [ngClass]="{'highlight': selectedRowIndex == row.id}"
+                         (click)="highlight(row)"></mat-row>
+            </mat-table>
+
+            <mat-paginator #paginator2
+                           [length]="bulkDataSource.totalSize"
+                           [pageIndex]="bulkDataSource.page"
+                           [pageSize]="bulkDataSource.pageSize"
+                           [pageSizeOptions]="[20, 40, 60, 80, 100]"
+                           (page)="logBulkEvent($event)"
+            >
+            </mat-paginator>
+        </div>
+        <ng-template #loading>
+            Loading Please Wait...
+        </ng-template>
+
+        <div *ngIf="showIndividualRequests" style="border: 1px solid orange; margin-top: 10px;">
+            <app-bulk-individual-recharge-component [bulkId]="bulkId" [type]="'normal'"></app-bulk-individual-recharge-component>
+        </div>
+    </div>
+</div>

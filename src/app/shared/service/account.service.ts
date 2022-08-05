@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {Page} from './utility/page';
 import {Account, Transaction} from '../model/account.model';
+import {WalletFund} from '../model/wallet-fund.model';
 
 const ACCOUNT_URL = environment.base_url + '/api/v1/account';
 const TRANSACTION_URL = environment.base_url + '/api/v1/transaction';
@@ -28,5 +29,20 @@ export class AccountService {
 
     public findTransaction(id: string): Observable<Transaction> {
         return this.http.get<Transaction>(TRANSACTION_URL + '/id');
+    }
+
+    public updateBalance(id: string, balance: number): Observable<any> {
+        return this.http.put(ACCOUNT_URL + '/balance/' + id, {
+            balance: balance
+        });
+    }
+
+    findWalletFundings(userId: string, pageNumber: number, pageSize: number): Observable<Page<WalletFund>> {
+        return this.http.get<Page<WalletFund>>(ACCOUNT_URL + '/wallet/' + userId, {
+            params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+            }
+        });
     }
 }

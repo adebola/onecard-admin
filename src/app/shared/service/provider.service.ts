@@ -3,7 +3,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Page} from './utility/page';
-import {Action, Provider, ProviderCategory, RechargeProvider, ServiceAction} from '../model/provider.model';
+import {Action, Provider, ProviderCategory, ServiceAction} from '../model/provider.model';
+import {RechargeProvider} from '../model/recharge-provider.model';
 
 const PROVIDER_URL = environment.base_url + '/api/v1/provider';
 const PROVIDER_SERVICE_URL = environment.base_url + '/api/v1/provider/service';

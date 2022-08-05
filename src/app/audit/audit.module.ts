@@ -7,6 +7,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AuditlistComponent} from './auditlist/auditlist.component';
 import {AuditRoutes} from './audit.routing';
 import {AuditFormComponent} from './auditform/auditform.component';
+import {ContactListComponent} from './contactlist/contactlist.component';
+import {ContactFormComponent} from './contactform/contactform.component';
 
 
 @NgModule({
@@ -20,7 +22,9 @@ import {AuditFormComponent} from './auditform/auditform.component';
     // providers: [DatePipe],
     declarations: [
         AuditlistComponent,
-        AuditFormComponent
+        AuditFormComponent,
+        ContactListComponent,
+        ContactFormComponent
     ]
 })
 export class AuditModule {}

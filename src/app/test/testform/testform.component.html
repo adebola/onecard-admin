@@ -1,0 +1,74 @@
+<div class="main-content">
+    <H1>test module</H1>
+
+    <button (click)="recharge()" mat-raised-button class="btn btn-warning btn-fill">
+        Recharge
+    </button>
+
+    <button (click)="finalRecharge()" class="btn btn-warning btn-fill">
+        Final BULK Recharge
+    </button>
+
+    <input type="text" placeholder="UUID" #uuid>
+
+    <button (click)="getTransactions()" class="btn btn-warning btn-fill">
+       Get Transactions
+    </button>
+
+    <button (click)="bulkRecharge()" class="btn btn-warning btn-fill">
+        BulkRecharge
+    </button>
+
+    <button (click)="scheduledRecharge()" class="btn btn-warning btn-fill">
+        Scheduled Recharge
+    </button>
+
+    <button (click)="initializeFundWallet()" class="btn btn-warning btn-fill">
+        Initialize Fund wallet
+    </button>
+
+    <button (click)="fundWallet()" class="btn btn-warning btn-fill">
+        Fund wallet
+    </button>
+
+    <button (click)="balance()" class="btn btn-warning btn-fill">
+        Balance
+    </button>
+
+    <button (click)="autoSchedule()" class="btn btn-warning btn-fill">
+        Auto-Recharge
+    </button>
+
+    <button (click)="getAutoSchedule()" class="btn btn-warning btn-fill">
+        Get AutoRecharge
+    </button>
+
+    <button (click)="getAutoRecharges()" class="btn btn-warning btn-fill">
+        Get Auto Recharges
+    </button>
+
+    <button (click)="downloadFile()" class="btn btn-warning btn-fill">
+       Download Excel File
+    </button>
+
+    <button (click)="sendSms()" class="btn btn-warning btn-fill">
+        Send SMS
+    </button>
+
+    <button (click)="sendBulkSms()" class="btn btn-warning btn-fill">
+        Send Bulk SMS
+    </button>
+
+    <form>
+        <input type="file" style="display: none"
+               id="txtFileUpload"
+               (change)="changeListener($event)" accept=".xlsx" #hiddenFileInput/>
+
+        <label style="display: block" *ngIf="selectedFile">File Selected {{selectedFile.name}}</label>
+        <button (click)="hiddenFileInput.click()" type="button" class="btn btn-warning btn-lg mr-3">
+            Select XLS
+            File
+        </button>
+        <button (click)="onSubmit()" type="submit" class="btn btn-info btn-lg">Upload File</button>
+    </form>
+</div>

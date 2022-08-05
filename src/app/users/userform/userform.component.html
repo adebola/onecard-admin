@@ -81,24 +81,67 @@
                                             <input type="text" matInput formControlName="balance" readonly>
                                         </mat-form-field>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <button mat-raised-button class="btn btn-outline-warning text-sm-right" type="button" data-toggle="modal" data-target="#myModal">
+                                            Manage Balance
+                                        </button>
+                                    </div>
+
                                 </ng-container>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <div class="card-footer text-center">
                                     <button mat-raised-button class="btn btn-warning btn-fill text-sm-right" type="button" (click)="onShowTransaction()">
                                         {{showTransactions ? 'Hide Transactions' : 'Show Transactions'}}
                                     </button>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <div class="card-footer text-center d-flex" style="justify-content: flex-end"
-                                     *ngIf="editMode; else savetemplate">
-                                    <button mat-raised-button type="submit" class="btn btn-warning btn-fill text-sm-right"
-                                            style="align-content: flex-end">Update User
+
+                            <div class="col-4">
+                                <div class="card-footer text-center">
+                                    <button mat-raised-button class="btn btn-warning btn-fill text-sm-right" type="button" (click)="onShowRecharges()">
+                                        {{showRecharges ? 'Hide Recharges' : 'Show Recharges'}}
                                     </button>
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="card-footer text-center">
+                                    <button mat-raised-button class="btn btn-warning btn-fill text-sm-right" type="button" (click)="onShowFunding()">
+                                        {{showFunding ? 'Hide Funding' : 'Show Funding'}}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Manage User Balance</h4>
+                                        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <i class="material-icons">clear</i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group bmd-form-group is-filled">
+                                            <div class="row">
+                                                <label class="col-sm-3 col-form-label">Balance</label>
+                                                <div class="col-md-9 col-lg-8 ml-auto mr-auto">
+                                                    <mat-form-field >
+                                                        <input matInput placeholder="Add to Balance" type="number" value=0 #balance>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button mat-raised-button type="button" class="btn btn-link btn-success"
+                                                data-dismiss="modal" (click)="saveBalance()">Update</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -114,6 +157,9 @@
             </div>
         </div>
 
+        <app-recharges-component [display]="showRecharges" [userId]="id"></app-recharges-component>
+        <app-funding-component [display]="showFunding" [userId]="id"></app-funding-component>
+
         <div class="row" *ngIf="showTransactions">
             <div class="col-md-12">
                 <div class="card">
@@ -128,11 +174,6 @@
                                 <ng-container matColumnDef="id">
                                     <mat-header-cell *matHeaderCellDef>TxID</mat-header-cell>
                                     <mat-cell *matCellDef="let transaction">{{transaction.id}}</mat-cell>
-                                </ng-container>
-
-                                <ng-container matColumnDef="counterparty">
-                                    <mat-header-cell *matHeaderCellDef>CounterParty</mat-header-cell>
-                                    <mat-cell *matCellDef="let transaction">{{transaction.counterpartyName}}</mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="date">

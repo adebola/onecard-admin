@@ -10,5 +10,6 @@ export interface User {
     lastName: string;
     email: string;
     requiredActions: string[];
+    profilePicture: string;
     account: Account;
 }

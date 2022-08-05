@@ -1,0 +1,141 @@
+<div class ="m-0 p-0">
+    <div class="mx-2" style="align-items: center">
+        <p>Individual Requests for Bulk recharge {{bulkId}}</p>
+    </div>
+
+    <div class="row">
+        <label class="col-md-2 col-form-label">Search By</label>
+        <div class="col-md-4" style="max-width: 150px;">
+            <mat-form-field>
+                <mat-select (selectionChange)="onIndividualChange($event)">
+                    <mat-option *ngFor="let search of searchIndividualOptions"
+                                [value]="search">
+                        {{search}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-6" *ngIf="searchIndividualByRecipient">
+            <mat-form-field style="max-width: 300px;">
+                <input matInput placeholder="Search By Recipient"
+                       #byIndividualRecipient>
+            </mat-form-field>
+        </div>
+
+        <div class="col-md-6" *ngIf="searchIndividualByProduct">
+            <mat-form-field style="max-width: 300px;">
+                <input matInput placeholder="Search By Product" #byIndividualProduct>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field class="col-md-6" *ngIf="searchIndividualByStatus && individualStatusOptions">
+            <mat-select (selectionChange)="onIndividualStatusChange($event)">
+                <mat-option *ngFor="let status of individualStatusOptions"
+                            [value]="status">
+                    {{status}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="table-responsive" *ngIf="individualDataSource; else loading">
+        <mat-table matSort matSortDirection="asc" [dataSource]="individualDataSource"
+                   *ngIf="!(individualDataSource.loading$ | async); else loading">
+            <ng-container matColumnDef="service">
+                <mat-header-cell *matHeaderCellDef>Service</mat-header-cell>
+                <mat-cell
+                        *matCellDef="let individual">{{individual.serviceCode}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cost">
+                <mat-header-cell mat-header-cell *matHeaderCellDef>Cost
+                </mat-header-cell>
+                <mat-cell
+                        *matCellDef="let individual">{{individual.serviceCost | currency: "₦":"symbol":"1.0-0"}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="recipient">
+                <mat-header-cell mat-header-cell *matHeaderCellDef>Recipient
+                </mat-header-cell>
+                <mat-cell
+                        *matCellDef="let individual">{{individual.recipient}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status" *ngIf="individualStatusOptions">
+                <mat-header-cell mat-header-cell *matHeaderCellDef>Status
+                </mat-header-cell>
+                <mat-cell
+                        *matCellDef="let individual">{{individual.failed ? "Failed" : "Success" }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="retry">
+                <mat-header-cell mat-header-cell *matHeaderCellDef>Retry</mat-header-cell>
+                <mat-cell *matCellDef="let individual">
+                    <ng-container *ngIf="individual.failed && !individual.refundId && !individual.resolveId">
+                        <ng-container *ngIf="individual.retryId; else retrytemplate">
+                            Re-tried
+                        </ng-container>
+                        <ng-template #retrytemplate>
+                            <button mat-raised-button class="btn btn-sm btn-outline-warning"
+                                    type="button" (click)="openIndividualRetryModal(individual.id, individual.recipient)">Retry</button>
+                        </ng-template>
+                    </ng-container>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="refund">
+                <mat-header-cell mat-header-cell *matHeaderCellDef>Refund</mat-header-cell>
+                <mat-cell *matCellDef="let individual">
+                    <ng-container *ngIf="individual.failed  && !individual.retryId && !individual.resolveId">
+                        <ng-container *ngIf="individual.refundId; else refundtemplate">
+                            Refunded
+                        </ng-container>
+                        <ng-template #refundtemplate>
+                            <button mat-raised-button class="btn btn-sm btn-outline-warning"
+                                    type="button"(click)="individualRefund(individual.id)">Refund</button>
+                        </ng-template>
+                    </ng-container>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="resolve">
+                <mat-header-cell mat-header-cell *matHeaderCellDef>Resolve</mat-header-cell>
+                <mat-cell *matCellDef="let individual">
+                    <ng-container *ngIf="individual.failed && !individual.retryId && !individual.refundId">
+                        <ng-container *ngIf="individual.resolveId; else resolvetemplate">
+                            Resolved
+                        </ng-container>
+                        <ng-template #resolvetemplate>
+                            <button mat-raised-button class="btn btn-sm btn-outline-warning"
+                                    type="button" (click)="openIndividualResolveModal(individual.id)">Resolve</button>
+                        </ng-template>
+                    </ng-container>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="individualColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: individualColumns"></mat-row>
+        </mat-table>
+
+        <mat-paginator #paginator3
+                       [length]="individualDataSource.totalSize"
+                       [pageIndex]="individualDataSource.page"
+                       [pageSize]="individualDataSource.pageSize"
+                       [pageSizeOptions]="[20, 40, 60, 80, 100]"
+                       (page)="logIndividualEvent($event)"
+        >
+        </mat-paginator>
+    </div>
+    <div class="row">
+        <div class="col-md-6"></div>
+        <div class="col-md-6" style="text-align: end;">
+            <button (click)="retryAll(bulkId)" mat-raised-button class="btn btn-sm btn-outline-warning" type="button">Retry</button>
+            <button (click)="refundAll()" mat-raised-button class="btn btn-sm btn-outline-warning" type="button">Refund</button>
+            <button (click)="resolveAll()"  mat-raised-button class="btn btn-sm btn-outline-warning" style="margin-right: 5px;" type="button">Resolve</button>
+        </div>
+    </div>
+    <ng-template #loading>
+        Loading Please Wait...
+    </ng-template>
+</div>

@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ProviderService} from '../../shared/service/provider.service';
-import {RechargeProviderDatasource} from '../providerform/recharge-provider.datasource';
+import {RechargeProviderDatasource} from '../rechargeproviderlist/recharge-provider.datasource';
 import {NotificationService} from '../../shared/service/notification.service';
 import {catchError} from 'rxjs/operators';
 import {throwError} from 'rxjs';
@@ -20,7 +20,7 @@ export class ProviderDetailsComponent implements OnInit, OnDestroy {
 
     public selectedRowIndex = -1;
     public datasource: RechargeProviderDatasource;
-    public dislayedColumns = ['id', 'name', 'code'];
+    public dislayedColumns = ['id', 'name', 'code', 'priority'];
 
     ngOnDestroy(): void {
     }

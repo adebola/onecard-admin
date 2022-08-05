@@ -31,6 +31,10 @@ export const AppRoutes: Routes = [
               loadChildren: () => import('./users/user.module').then(m => m.UserModule), canActivate: [AuthGuard]
           },
           {
+              path: 'organizations',
+              loadChildren: () => import('./organizations/organization.module').then(m => m.OrganizationModule), canActivate: [AuthGuard]
+          },
+          {
               path: 'audit',
               loadChildren: () => import('./audit/audit.module').then(m => m.AuditModule), canActivate: [AuthGuard]
           },
@@ -41,6 +45,14 @@ export const AppRoutes: Routes = [
           {
               path: 'tasks',
               loadChildren: () => import('./tasks/tasks.module').then(m => m.TaskModule), canActivate: [AuthGuard]
+          },
+          {
+              path: 'test',
+              loadChildren: () => import('./test/test.module').then(m => m.TestModule), canActivate: [AuthGuard]
+          },
+          {
+              path: 'failed',
+              loadChildren: () => import('./failed/failed.module').then(m => m.FailedModule), canActivate: [AuthGuard]
           }
       ]
     },
@@ -49,7 +61,7 @@ export const AppRoutes: Routes = [
       component: AuthLayoutComponent,
       children: [{
         path: 'profiles',
-        loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate: [AuthGuard]
+        // loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule), canActivate: [AuthGuard]
       }]
     }
 ];

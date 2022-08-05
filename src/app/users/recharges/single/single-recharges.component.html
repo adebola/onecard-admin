@@ -1,0 +1,129 @@
+<div class="mx-0 px-0">
+    <div class="card-body">
+        <div class="row">
+            <label class="col-md-2 col-form-label">Search By</label>
+            <div class="col-md-4" style="max-width: 150px;">
+                <mat-form-field>
+                    <mat-select (selectionChange)="onChange($event)">
+                        <mat-option *ngFor="let search of searchRechargeOptions"
+                                    [value]="search">
+                            {{search}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6" *ngIf="searchByRecipient">
+                <mat-form-field style="max-width: 300px;">
+                    <input matInput placeholder="Search By Recipient" #byRecipient
+                           id="recipient">
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6" *ngIf="searchByProduct">
+                <mat-form-field style="max-width: 300px;">
+                    <input matInput placeholder="Search By Product" #byProduct id="product">
+                </mat-form-field>
+            </div>
+
+            <mat-form-field class="col-md-6" *ngIf="searchByDate">
+                <input matInput [matDatepicker]="picker" (dateChange)="valueChange($event)"
+                       placeholder="Choose Recharge Date" (click)="picker.open()"
+                       [(ngModel)]="rechargeDate" #rechargedate/>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="table-responsive" *ngIf="singleDatasource; else loading">
+            <mat-table matSort matSortDirection="asc" [dataSource]="singleDatasource"
+                       *ngIf="!(singleDatasource.loading$ | async); else loading">
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef>Recipient</mat-header-cell>
+                    <mat-cell *matCellDef="let single">{{single.recipient}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="servicecode">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Product</mat-header-cell>
+                    <mat-cell *matCellDef="let single">{{single.serviceCode}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="servicecost">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Price</mat-header-cell>
+                    <mat-cell
+                            *matCellDef="let single">{{single.serviceCost | currency: "₦":"symbol":"1.0-0"}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="date">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
+                    <mat-cell *matCellDef="let single">{{single.createdAt | date}}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                    <mat-cell
+                            *matCellDef="let single">{{single.failed ? "Failed" : "Success" }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="retry">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Retry</mat-header-cell>
+                    <mat-cell *matCellDef="let single">
+                        <ng-container *ngIf="single.failed && !single.refundId && !single.resolveId">
+                            <ng-container *ngIf="single.retryId; else retrytemplate">
+                                Re-tried
+                            </ng-container>
+                            <ng-template #retrytemplate>
+                                <button mat-raised-button class="btn btn-sm btn-outline-warning"
+                                        type="button"(click)="openRefundModal(single.id, single.recipient)">Retry</button>
+                            </ng-template>
+                        </ng-container>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="refund">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Refund</mat-header-cell>
+                    <mat-cell *matCellDef="let single">
+                        <ng-container *ngIf="single.failed  && !single.retryId && !single.resolveId">
+                            <ng-container *ngIf="single.refundId; else refundtemplate">
+                                Refunded
+                            </ng-container>
+                            <ng-template #refundtemplate>
+                                <button mat-raised-button class="btn btn-sm btn-outline-warning"
+                                        type="button"(click)="singleRefund(single.id)">Refund</button>
+                            </ng-template>
+                        </ng-container>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="resolve">
+                    <mat-header-cell mat-header-cell *matHeaderCellDef>Resolve</mat-header-cell>
+                    <mat-cell *matCellDef="let single">
+                        <ng-container *ngIf="single.failed && !single.retryId && !single.refundId">
+                            <ng-container *ngIf="single.resolveId; else resolvetemplate">
+                                Resolved
+                            </ng-container>
+                            <ng-template #resolvetemplate>
+                                <button mat-raised-button class="btn btn-sm btn-outline-warning"
+                                        type="button" (click)="openSingleModal(single.id)">Resolve</button>
+                            </ng-template>
+                        </ng-container>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="singleColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: singleColumns"></mat-row>
+            </mat-table>
+
+            <mat-paginator #paginator1
+                           [length]="singleDatasource.totalSize"
+                           [pageIndex]="singleDatasource.page"
+                           [pageSize]="singleDatasource.pageSize"
+                           [pageSizeOptions]="[20, 40, 60, 80, 100]"
+                           (page)="logSingleEvent($event)"
+            >
+            </mat-paginator>
+        </div>
+        <ng-template #loading>
+            Loading Please Wait...
+        </ng-template>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+.mat-selection-list {
+    border: solid 1px #000000;
+}
+
+.modal-dialog {
+    max-width: 600px; /* New width for default modal */
+}

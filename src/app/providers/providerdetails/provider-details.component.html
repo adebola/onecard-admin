@@ -27,14 +27,42 @@
                         </mat-row>
                     </mat-table>
 
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Select Provider</h4>
+                                    <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <i class="material-icons">clear</i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group bmd-form-group is-filled">
+                                        <div class="row">
+                                            <label class="col-sm-3 col-form-label">Balance</label>
+                                            <div class="col-md-9 col-lg-8 ml-auto mr-auto">
+                                                <mat-form-field >
+                                                    <input matInput placeholder="New Balance" type="number" value="test"#balance>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button mat-raised-button type="button" class="btn btn-link">Save</button>
+                                    <button mat-raised-button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <ng-template #loading>
                         Loading Please Wait...
                     </ng-template>
                 </div>
             </div>
             <div class="card-footer d-flex" style="justify-content: end;">
-                <button mat-raised-button type="button"
-                        class="btn btn-success btn-fill mr-2" (click)="addProvider()">
+                <button mat-raised-button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal">
                     Add
                 </button>
                 <button mat-raised-button type="button"

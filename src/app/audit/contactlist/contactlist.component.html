@@ -1,0 +1,68 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">contact_page</i>
+                        </div>
+                        <h4 class="card-title">Contacts</h4>
+                    </div>
+                    <div class="card-body">
+                        <mat-form-field style="max-width: 300px;">
+                            <input  matInput placeholder="Search Messages by Name" #input>
+                        </mat-form-field>
+
+                        <div class="table-responsive">
+                            <mat-table matSort matSortDirection="asc" [dataSource]="datasource" *ngIf="!(datasource.loading$ | async); else loading">
+
+                                <ng-container matColumnDef="id">
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef >Id</mat-header-cell>
+                                    <mat-cell *matCellDef="let contact">{{contact.id}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="name">
+                                    <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+                                    <mat-cell *matCellDef="let contact">{{contact.name}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="email">
+                                    <mat-header-cell *matHeaderCellDef>E-Mail</mat-header-cell>
+                                    <mat-cell *matCellDef="let contact">{{contact.email}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="phone">
+                                    <mat-header-cell *matHeaderCellDef>Telephone</mat-header-cell>
+                                    <mat-cell *matCellDef="let contact">{{contact.phone}}</mat-cell>
+                                </ng-container>
+
+                                <ng-container matColumnDef="view">
+                                    <mat-header-cell *matHeaderCellDef>View</mat-header-cell>
+                                    <mat-cell mat-cell *matCellDef="let contact" class="td-actions text-right">
+                                        <i class="material-icons" style="color: #4CAF50; cursor: pointer;" (click)="onView(contact.id)">preview</i>
+                                    </mat-cell>
+                                </ng-container>
+
+                                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+                            </mat-table>
+
+                            <mat-paginator #paginator
+                                           [length]="datasource.totalSize"
+                                           [pageIndex]="datasource.page"
+                                           [pageSize]="datasource.pageSize"
+                                           [pageSizeOptions]="[20, 40, 60, 80, 100]"
+                                           (page)="logEvent($event)"
+                            >
+                            </mat-paginator>
+                            <ng-template #loading>
+                                Loading Please Wait...
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

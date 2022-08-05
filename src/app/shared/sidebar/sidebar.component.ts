@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import PerfectScrollbar from 'perfect-scrollbar';
 import {KeycloakService} from 'keycloak-angular';
+import {UserService} from '../service/user.service';
 
 export interface RouteInfo {
     path: string;
@@ -18,6 +19,7 @@ export interface ChildrenItems {
     type?: string;
 }
 
+
 // Menu Items
 export const ROUTES: RouteInfo[] = [
     {
@@ -26,12 +28,6 @@ export const ROUTES: RouteInfo[] = [
         type: 'link',
         icontype: 'dashboard'
     },
-    // {
-    //     path: '/tasks/task',
-    //     title: 'Tasks',
-    //     type: 'link',
-    //     icontype: 'tasks'
-    // },
     {
         path: '/vouchers',
         title: 'Vouchers',
@@ -52,50 +48,58 @@ export const ROUTES: RouteInfo[] = [
         collapse: 'providers',
         children: [
             {path: 'provider', title: 'Providers', ab: 'P'},
-            {path: 'category', title: 'Provider Categories', ab: 'PC'}
+            {path: 'category', title: 'Provider Categories', ab: 'PC'},
+            {path: 'rechargelist', title: 'Recharge Providers', ab: 'RP'}
         ]
     },
-    // {
-    //     path: '/agents',
-    //     title: 'Agents',
-    //     type: 'link',
-    //     icontype: 'contacts'
-    // },
     {
         path: '/users/user',
         title: 'Users',
         type: 'link',
         icontype: 'people'
     },
+    {
+        path: '/organizations/organization',
+        title: 'Organizations',
+        type: 'link',
+        icontype: 'corporate_fare'
+    },
+    {
+        path: '/audit',
+        title: 'Audit',
+        type: 'sub',
+        icontype: 'person_search',
+        collapse: 'audit',
+        children: [
+            {path: 'audit', title: 'Audit', ab: 'A'},
+            {path: 'contact', title: 'Contact', ab: 'C'}
+        ]
+    },
+    {
+        path: '/failed',
+        title: 'Failed Recharges',
+        type: 'sub',
+        icontype: 'grid_off',
+        collapse: 'failed',
+        children: [
+            {path: 'single', title: 'All Single', ab: 'A'},
+            {path: 'single_unresolved', title: 'Unresolved Single', ab: 'U'},
+            {path: 'bulk', title: 'All Bulk', ab: 'B'},
+            {path: 'bulk_unresolved', title: 'Unresolved Bulk', ab: 'U'}
+        ]
+    },
     // {
-    //     path: '/pages/page',
-    //     title: 'Pages',
-    //     type: 'link',
-    //     icontype: 'pages'
-    // },
-    // {
-    //     path: '/blogs/blog',
-    //     title: 'Blogs',
-    //     type: 'link',
-    //     icontype: 'post_add'
-    // },
-    // {
-    //     path: '/recharges/recharge',
-    //     title: 'Recharge',
+    //     path: '/test/test',
+    //     title: 'Test',
     //     type: 'link',
     //     icontype: 'battery_charging_full'
     // },
     {
-        path: '/audit/audit',
-        title: 'Audit',
-        type: 'link',
-        icontype: 'person_search'
-    },
-    {
         path: '/reports/report',
         title: 'Reports',
         type: 'link',
-        icontype: 'summarize',
+        icontype: 'web-stories',
+        // icontype: 'summarize',
     }
 ];
 @Component({
@@ -105,21 +109,33 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
     public menuItems: any[];
     ps: any;
+    public userName: string;
+    public userImage = '../../../assets/img/faces/default-avatar.png';
 
-    constructor(protected readonly keycloak: KeycloakService) {}
+    constructor(private userService: UserService,
+                private keycloak: KeycloakService) {}
 
     ngOnInit() {
+        this.userService.findSelf().subscribe(user => {
+            this.userName = user.username;
+            if (user.profilePicture) {
+                this.userImage = user.profilePicture;
+            }
+        });
+
         this.menuItems = ROUTES.filter(menuItem => menuItem);
         if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {
             const elemSidebar = <HTMLElement>document.querySelector('.sidebar .sidebar-wrapper');
             this.ps = new PerfectScrollbar(elemSidebar);
         }
     }
+
     updatePS(): void  {
         if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {
             this.ps.update();
         }
     }
+
     isMac(): boolean {
         let bool = false;
         if (navigator.platform.toUpperCase().indexOf('MAC') >= 0 || navigator.platform.toUpperCase().indexOf('IPAD') >= 0) {
@@ -133,3 +149,4 @@ export class SidebarComponent implements OnInit {
         this.keycloak.logout().then(o => console.log('You have been logged Out'));
     }
 }
+

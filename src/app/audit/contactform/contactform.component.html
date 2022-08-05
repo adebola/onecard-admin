@@ -1,0 +1,71 @@
+<div class="main-content">
+    <div class="card ">
+        <div class="card-header card-header-warning card-header-text">
+            <div class="card-text">
+                <h4 class="card-title">Contact Details</h4>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container form-horizontal" *ngIf="(contact$ | async) as contact; else loading">
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Id</label>
+                    <div class="col-sm-10">
+                        <mat-form-field class="example-full-width has-label">
+                            <input type="text" matInput class="form-control" [value]="contact.id" readonly/>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-4">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" matInput class="form-control" [value]="contact.name" readonly/>
+                        </mat-form-field>
+                    </div>
+                    <label class="col-sm-2 col-form-label">E-mail</label>
+                    <div class="col-sm-4">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" matInput class="form-control" [value]="contact.email" readonly/>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Telephone</label>
+                    <div class="col-sm-4">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" matInput class="form-control" [value]="contact.phone" readonly/>
+                        </mat-form-field>
+                    </div>
+                    <label class="col-sm-2 col-form-label">Date</label>
+                    <div class="col-sm-4">
+                        <mat-form-field class="example-full-width">
+                            <input type="text" matInput class="form-control"
+                                   [value]="contact.createdDate | date" readonly/>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">Message</label>
+                    <div class="col-10">
+                        <textarea matInput readonly>{{contact.message}}</textarea>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex" style="justify-content: flex-end">
+                    <button mat-raised-button (click)="back()"
+                            class="btn btn-warning btn-fill text-sm-right"
+                            style="align-content: flex-end" >Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #loading>
+        Loading Please Wait...
+    </ng-template>
+</div>

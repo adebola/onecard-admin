@@ -10,6 +10,8 @@ import {ProviderCategoryListComponent} from './providercategorylist/provider-cat
 import {CategoryFormComponent} from './categoryform/category-form.component';
 import {ProviderDetailsComponent} from './providerdetails/provider-details.component';
 import {AddProviderComponent} from './addProvider/addprovider.component';
+import {RechargeProviderListComponent} from './rechargeproviderlist/recharge-provider-list.component';
+import {RechargeProviderFormComponent} from './rechargeproviderform/recharge-provider-form.component';
 
 @NgModule({
     imports: [
@@ -26,7 +28,9 @@ import {AddProviderComponent} from './addProvider/addprovider.component';
         ProviderCategoryListComponent,
         CategoryFormComponent,
         ProviderDetailsComponent,
-        AddProviderComponent
+        AddProviderComponent,
+        RechargeProviderListComponent,
+        RechargeProviderFormComponent
     ]
 })
 export class ProviderModule {}

@@ -3,6 +3,8 @@ import {ProviderListComponent} from './providerlist/provider-list.component';
 import {ProviderFormComponent} from './providerform/provider-form.component';
 import {ProviderCategoryListComponent} from './providercategorylist/provider-category-list.component';
 import {CategoryFormComponent} from './categoryform/category-form.component';
+import {RechargeProviderListComponent} from './rechargeproviderlist/recharge-provider-list.component';
+import {RechargeProviderFormComponent} from './rechargeproviderform/recharge-provider-form.component';
 
 export const ProviderRoutes: Routes = [
     {
@@ -56,6 +58,33 @@ export const ProviderRoutes: Routes = [
             {
                 path: 'categoryform/:id',
                 component: CategoryFormComponent
+            }
+        ]
+    },
+    {
+        path: '',
+        children: [
+            {
+                path: 'rechargelist',
+                component: RechargeProviderListComponent
+            }
+        ]
+    },
+    {
+        path: '',
+        children: [
+            {
+                path: 'rechargeproviderform',
+                component: RechargeProviderFormComponent
+            }
+        ]
+    },
+    {
+        path: '',
+        children: [
+            {
+                path: 'rechargeproviderform/:id',
+                component: RechargeProviderFormComponent
             }
         ]
     }

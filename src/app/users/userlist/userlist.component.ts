@@ -1,11 +1,11 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {UserDatasource} from './user.datasource';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../shared/service/user.service';
 import {Subscription} from 'rxjs/Subscription';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
+import {UserDatasource} from '../../shared/datasource/user.datasource';
 
 @Component({
     selector: 'app-user-list',
@@ -38,7 +38,7 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
                 distinctUntilChanged(),
                 tap(() => {
                     this.paginator.pageIndex = 0;
-                    this.datasource.loadUsers(this.input.nativeElement.value);
+                    this.datasource.loadUsers(1, 20, this.input.nativeElement.value);
                 })
             ).subscribe();
     }
@@ -51,10 +51,12 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnInit(): void {
         this.datasource = new UserDatasource(this.userService);
-        this.datasource.loadUsers();
+        this.datasource.loadUsers(1, 20);
     }
 
-    logEvent($event: PageEvent) {}
+    logEvent($event: PageEvent) {
+        this.datasource.loadUsers($event.pageIndex + 1, $event.pageSize);
+    }
 
     onView(id) {
         this.router.navigate(['/users/userform', id]);

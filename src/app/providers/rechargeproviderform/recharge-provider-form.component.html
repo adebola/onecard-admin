@@ -1,0 +1,76 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form [formGroup]="providerForm"  (ngSubmit)="onSubmit(providerForm)" class="form-horizontal" >
+                        <div class="card-header card-header-warning card-header-text">
+                            <div class="card-text">
+                                <h4 class="card-title">Clusters</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">Cluster Id</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="id" formControlName="id" name="id" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="name" formControlName="name" name="name" required>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="providerForm.controls.name.touched && providerForm.controls.name.invalid">
+                                        <span *ngIf="providerForm.controls.name.errors?.required">This field is mandatory</span>
+                                    </mat-error>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Code</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="code" formControlName="code" name="code" required>
+                                    </mat-form-field>
+                                    <mat-error *ngIf="providerForm.controls.code.touched && providerForm.controls.code.invalid">
+                                        <span *ngIf="providerForm.controls.code.errors?.required">This field is mandatory</span>
+                                    </mat-error>
+                                </div>
+                            </div>
+
+
+                            <div class="row" *ngIf="editMode">
+                                <label class="col-sm-2 col-form-label">Balance</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="balance" formControlName="balance" name="balance" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="card-footer text-center d-flex" style="justify-content: flex-end" *ngIf="editMode; else savetemplate">
+                            <button mat-raised-button type="submit" class="btn btn-warning btn-fill text-sm-right" style="align-content: flex-end">Update Recharge Provider</button>
+                        </div>
+
+                        <ng-template #savetemplate>
+                            <div class="card-footer text-center d-flex" style="justify-content: flex-end">
+                                <button mat-raised-button type="submit" class="btn btn-warning btn-fill">Save Recharge Provider</button>
+                            </div>
+                        </ng-template>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

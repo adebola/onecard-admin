@@ -4,39 +4,43 @@ import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Page} from './utility/page';
 import {User} from '../model/user.model';
+import {Role} from '../model/role.model';
+import {Organization} from '../model/organization.model';
+import {WalletFund} from '../model/wallet-fund.model';
 
 const USER_URL = environment.base_url + '/api/v1/user';
 const ROLE_URL = environment.base_url + '/api/v1/role';
-
-
-
-export interface Role {
-    id: string;
-    name: string;
-    description: string;
-}
-
-
-export interface RoleList {
-    rolelist: string[];
-}
+const ORGANIZATION_URL = environment.base_url + '/api/v1/organization';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
 
     constructor(private http: HttpClient) {}
 
-    public findUsers(): Observable<Page<User>> {
-        return this.http.get<Page<User>>(USER_URL);
+    // User Functions
+
+    public findUsers(pageNumber: number = 1, pageSize: number = 20): Observable<Page<User>> {
+        return this.http.get<Page<User>>(USER_URL, {
+            params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize
+            }
+        });
     }
 
     public findUserById(id: string): Observable<User> {
         return this.http.get<User>(USER_URL + '/' + id);
     }
 
-    public searchUsers(searchString: string): Observable<Page<User>> {
+    public findSelf(): Observable<User> {
+        return this.http.get<User>(USER_URL + '/self');
+    }
+
+    public searchUsers(pageNumber: number, pageSize: number, searchString: string): Observable<Page<User>> {
         return this.http.get<Page<User>>(USER_URL + '/search', {
             params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize,
                 searchString: searchString
             }
         });
@@ -46,12 +50,22 @@ export class UserService {
         return this.http.put(USER_URL + '/' + id, user);
     }
 
+    public updateSelf(user: Partial<User>): Observable<any> {
+        return this.http.put(USER_URL + '/self', user);
+    }
+
+    // Role Functions
+
     public findUserRoles(id: string): Observable<Role[]> {
         return this.http.get<Role[]>(ROLE_URL + '/user/' + id);
     }
 
     public findAllRoles(): Observable<Role[]> {
         return this.http.get<Role[]>(ROLE_URL);
+    }
+
+    public findCompanyRoles(): Observable<Role[]> {
+        return this.http.get<Role[]>(ROLE_URL + '/companyroles');
     }
 
     public addRole(id: string, roleList: string[]): Observable<any > {
@@ -66,11 +80,68 @@ export class UserService {
         });
     }
 
-    public findRoleById(id: string): Observable<Role> {
-        return this.http.get<Role>(ROLE_URL + '/' + id);
+    public findAllOrganizations(pageNumber: number, pageSize: number): Observable<Page<Organization>> {
+        return this.http.get<Page<Organization>>(ORGANIZATION_URL, {
+            params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize
+            }
+        });
     }
 
-    public findRoleByName(name: string): Observable<Role> {
-        return this.http.get<Role>(ROLE_URL + '/name/' + name);
+    findOrganizationById(id: string): Observable<Organization> {
+        return this.http.get<Organization>(ORGANIZATION_URL + '/' + id);
+    }
+
+    saveOrganization(organization: Partial<Organization>): Observable<any> {
+        return this.http.post(ORGANIZATION_URL, organization);
+    }
+
+    updateOrganization(id: string, organization: Partial<Organization>): Observable<any> {
+        return this.http.put(ORGANIZATION_URL + '/' + id, organization);
+    }
+
+    searchOrganizations(searchString: string): Observable<Page<Organization>> {
+        return this.http.get<Page<Organization>>(ORGANIZATION_URL + '/search', {
+            params: {
+                pageNumber: 1,
+                pageSize: 20,
+                searchString: searchString
+            }
+        });
+    }
+
+    removeOrganization(id: string): Observable<any> {
+        return this.http.delete(ORGANIZATION_URL + '/' + id);
+    }
+
+    findUserByOrganizationId(id: string, pageNumber: number, pageSize: number): Observable<Page<User>> {
+        return this.http.get<Page<User>>(ORGANIZATION_URL + '/users/' + id, {
+            params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+            }
+        });
+    }
+
+    findUserForOrganization(pageNumber: number, pageSize: number): Observable<Page<User>> {
+        return this.http.get<Page<User>>(ORGANIZATION_URL + '/' + 'addable', {
+            params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+            }
+        });
+    }
+
+    public addUserToOrganization(userId: string, organizationIds: string[]): Observable<any> {
+        return this.http.post(ORGANIZATION_URL + '/adduser/' + userId, {
+            users: organizationIds
+        });
+    }
+
+    public removeUserFromOrganization(userId: string, organizationIds: string[]): Observable<any> {
+        return this.http.post(ORGANIZATION_URL + '/removeuser/' + userId, {
+            users: organizationIds
+        });
     }
 }

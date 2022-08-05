@@ -1,0 +1,48 @@
+<div class="card">
+    <form [formGroup]="retryForm" (ngSubmit)="onSubmit(retryForm)" class="form-horizontal">
+        <div class="card-header card-header-warning card-header-text">
+            <div class="card-text">
+                <h4 class="card-title">Retry Recharge</h4>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Recharge Id</label>
+                <div class="col-sm-10">
+                    <mat-form-field class="example-full-width has-label">
+                        <input type="text" matInput id="rechargeId" formControlName="rechargeId" name="rechargeId"
+                               readonly>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Recipient</label>
+                <div class="col-sm-10">
+                    <mat-form-field class="example-full-width has-label">
+                        <input type="text" matInput id="recipient" formControlName="recipient" name="recipient">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <div class="card-footer text-center">
+                        <button mat-raised-button class="btn btn-outline-warning btn-fill text-sm-right" type="button"
+                                (click)="onCancel()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="card-footer text-center">
+                        <button mat-raised-button class="btn btn-outline-warning btn-fill text-sm-right" type="submit">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

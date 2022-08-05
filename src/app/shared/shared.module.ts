@@ -6,8 +6,16 @@ import {FooterComponent} from './footer/footer.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
 
 @NgModule({
-    imports: [ RouterModule, CommonModule ],
-    declarations: [ NavbarComponent, FooterComponent, SidebarComponent ],
-    exports: [ NavbarComponent, FooterComponent, SidebarComponent ]
+    imports: [RouterModule, CommonModule],
+    declarations: [
+        NavbarComponent,
+        FooterComponent,
+        SidebarComponent,
+    ],
+    exports: [
+        NavbarComponent,
+        FooterComponent,
+        SidebarComponent,
+    ]
 })
 export class SharedModule {}

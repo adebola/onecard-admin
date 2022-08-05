@@ -1,18 +1,19 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NotificationService} from '../../shared/service/notification.service';
-import {Role, UserService} from '../../shared/service/user.service';
+import {UserService} from '../../shared/service/user.service';
 import {catchError} from 'rxjs/operators';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {DatePipe} from '@angular/common';
 import {MatSelectionList} from '@angular/material/list';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {TransactionDatasource} from './transactions.datasource';
+import {TransactionDatasource} from '../../shared/datasource/transactions.datasource';
 import {AccountService} from '../../shared/service/account.service';
-import {MatButton} from '@angular/material/button';
 import {Voucher} from '../../shared/model/voucher.model';
+import {User} from '../../shared/model/user.model';
+import {Role} from '../../shared/model/role.model';
 
 @Component({
     selector: 'app-user-form',
@@ -25,6 +26,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     public id: string = null;
     public userForm: FormGroup;
     private subscription: Subscription;
+    public user: User;
 
     private allRolesSubject = new BehaviorSubject<Role[]>(null);
     private assignedRolesSubject = new BehaviorSubject<Role[]>(null);
@@ -34,12 +36,14 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
     @ViewChild('availableroles') availableRoles: MatSelectionList;
     @ViewChild('assignedroles') assignedRoles: MatSelectionList;
-
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild('balance') balanceInput: ElementRef;
 
     public datasource: TransactionDatasource;
-    public displayedColumns = ['id', 'counterparty', 'date', 'service', 'amount'];
+    public displayedColumns = ['id', 'date', 'service', 'amount'];
     public showTransactions = false;
+    public showRecharges = false;
+    public showFunding = false;
 
     constructor(private router: Router,
                 private datePipe: DatePipe,
@@ -98,7 +102,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
         this.subscription = this.userService.findUserById(this.id).pipe(
             catchError(err => {
-                console.log('EDIT USER ERROR', err);
                 return throwError(err);
             })
         ).subscribe(user => {
@@ -107,6 +110,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
                 this.notificationService.error('Error Loading User : ' + this.id + '. It might not exist, please contact Technical Support');
                 return this.router.navigate(['/users/user']);
             }
+
+            this.user = user;
 
             const formatter = new Intl.NumberFormat('en-NG', {
                 style: 'currency',
@@ -209,7 +214,46 @@ export class UserFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    onShowRecharges() {
+        this.showRecharges = !this.showRecharges;
+    }
+
+    onShowFunding() {
+        this.showFunding = !this.showFunding;
+    }
+
     logEvent($event: PageEvent) {
         this.datasource.loadTransactions(this.id, $event.pageIndex + 1, $event.pageSize);
+    }
+
+    saveBalance() {
+        const value = this.balanceInput.nativeElement.value;
+
+        if (!value) {
+            return this.notificationService.error('Please enter a valid number for the new Balance');
+        }
+
+        this.accountService.updateBalance(this.user.account.id, value).pipe(
+            catchError(err => this.handleError(err)),
+        ).subscribe(() => {
+            this.notificationService.success('The User Balance has been updated accordingly');
+
+            this.subscription = this.userService.findUserById(this.id).pipe(
+                catchError(err => {
+                    return throwError(err);
+                })
+            ).subscribe(user => {
+                this.user = user;
+
+                const formatter = new Intl.NumberFormat('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN',
+                });
+
+                this.userForm.patchValue({
+                    balance: formatter.format(user.account?.balance)
+                });
+            });
+        });
     }
 }

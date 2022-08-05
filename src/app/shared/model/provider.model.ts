@@ -40,16 +40,3 @@ export interface Action {
     action: string;
     fixedPrice: boolean;
 }
-
-export interface RechargeProvider {
-    id: number;
-    name: string;
-    code: string;
-    walletId: string;
-    createdBy: string;
-    createdDate: string;
-    activated: boolean;
-    activatedBy: string;
-    activationDate: string;
-    suspended: boolean;
-}

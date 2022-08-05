@@ -1,0 +1,26 @@
+<div class="mx-0 px-0" *ngIf="display">
+    <div class="container-fluid m-0 p-0">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <mat-tab-group animationDuration="500ms" (selectedTabChange)="tabSelectedChange($event)">
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <mat-icon class="example-tab-icon">done</mat-icon>
+                                Single Recharges
+                            </ng-template>
+                            <app-single-recharges-component [userId]="userId" [display]="display"></app-single-recharges-component>
+                        </mat-tab>
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <mat-icon class="example-tab-icon">done_all</mat-icon>
+                                Bulk Recharges
+                            </ng-template>
+                            <app-bulk-recharges-component [userId]="userId" [display]="display"></app-bulk-recharges-component>
+                        </mat-tab>
+                    </mat-tab-group>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

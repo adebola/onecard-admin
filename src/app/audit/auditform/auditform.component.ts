@@ -26,7 +26,10 @@ export class AuditFormComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.id = this.route.snapshot.paramMap.get('id');
-        this.subscription = this.auditService.findById(this.id).subscribe(this.auditSubject.next);
+        this.subscription = this.auditService.findById(this.id).subscribe(audit => {
+            console.log('AUDIT OBJECT', audit);
+            this.auditSubject.next(audit);
+        });
     }
 
     back() {

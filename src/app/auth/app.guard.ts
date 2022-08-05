@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
 import { KeycloakAuthGuard, KeycloakService } from 'keycloak-angular';
+import {NotificationService} from '../shared/service/notification.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthGuard extends KeycloakAuthGuard {
 
-    constructor( protected readonly router: Router, protected readonly keycloak: KeycloakService) {
+    constructor( protected readonly router: Router,
+                 protected readonly keycloak: KeycloakService,
+                 protected readonly notificationService: NotificationService) {
         super(router, keycloak);
     }
 
@@ -19,15 +22,12 @@ export class AuthGuard extends KeycloakAuthGuard {
             });
         }
 
-        // Get the roles required from the route.
-        const requiredRoles = route.data.roles;
-
-        // Allow the user to to proceed if no additional roles are required to access the route.
-        if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
+        if (this.keycloak.getUserRoles().filter(role => role.startsWith('Onecard')).length > 0) {
             return true;
         }
 
-        // Allow the user to proceed if all the required roles are present.
-        return requiredRoles.every((role) => this.roles.includes(role));
+        this.notificationService.error('You do not have Permissions to Log on to this platform');
+        await this.keycloak.logout();
+        return false;
     }
 }

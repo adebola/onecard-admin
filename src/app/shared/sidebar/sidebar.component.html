@@ -11,23 +11,22 @@
             </a>
         </div>
 
-
         <div class="sidebar-wrapper">
             <div class="user">
                 <div class="photo">
-                    <img src="../../../assets/img/faces/AJ.jpeg" />
+                    <img src= {{userImage}}/>
                 </div>
                 <div class="user-info">
                     <a data-toggle="collapse" href="#collapseExample" class="collapsed">
                         <span>
-                            AJ Odunowo
+                            {{userName}}
                             <b class="caret"></b>
                         </span>
                     </a>
                     <div class="collapse" id="collapseExample">
                         <ul class="nav">
                             <li class="nav-item">
-                                <a [routerLink]="['/profiles/profileform']"  class="nav-link">
+                                <a [routerLink]="['/users/profileform']"  class="nav-link">
                                     <span class="sidebar-mini">MP</span>
                                     <span class="sidebar-normal">My Profile</span>
                                 </a>

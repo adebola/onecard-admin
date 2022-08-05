@@ -1,0 +1,105 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <form [formGroup]="userForm" (ngSubmit)="onSubmit(userForm)" class="form-horizontal">
+                        <div class="card-header card-header-warning card-header-text">
+                            <div class="card-text">
+                                <h4 class="card-title">My Profile</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="fileinput fileinput-new text-center bmd-form-group mt-3"
+                                  data-provides="fileinput">
+                                <div class="fileinput-new thumbnail">
+                                    <img [src]="inputFileName" alt="..."/>
+                                </div>
+
+                                <div class="fileinput-preview fileinput-exists thumbnail"></div>
+
+                                <div>
+                                    <span class="btn btn-warning btn-round btn-file">
+                                        <span class="fileinput-new">Select image</span>
+                                        <span class="fileinput-exists">Change</span>
+                                        <input (change)="onFileChange($event)" type="file" name="image" id="image" formControlName="image" class="form-control"/>
+                                    </span>
+                                    <a href="#" class="btn btn-danger btn-round fileinput-exists" data-dismiss="fileinput"><i
+                                           class="fa fa-times"></i> Remove</a>
+                                </div>
+                            </span>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">User Id</label>
+                                <div class="col-sm-10">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput id="userId" formControlName="userId" name="userId"
+                                               readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">UserName</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="text" name="username" matInput formControlName="username" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">E-Mail</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="email" name="count" matInput formControlName="email" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">FirstName</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="text" name="firstname" matInput formControlName="firstname">
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">LastName</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="has-label">
+                                        <input type="text" name="lastname" matInput formControlName="lastname">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Account Balance</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="balance" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <label class="col-sm-2 col-form-label">Created On</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="createdon" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-footer text-center d-flex" style="justify-content: flex-end">
+                                    <button mat-raised-button type="submit"
+                                            class="btn btn-warning btn-fill text-sm-right"
+                                            style="align-content: flex-end">Update User Profile
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
