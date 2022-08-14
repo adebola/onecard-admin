@@ -14,6 +14,8 @@ import {AccountService} from '../../shared/service/account.service';
 import {Voucher} from '../../shared/model/voucher.model';
 import {User} from '../../shared/model/user.model';
 import {Role} from '../../shared/model/role.model';
+import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
+import {BalanceModalComponent} from '../modals/balance/balance-modal.component';
 
 @Component({
     selector: 'app-user-form',
@@ -46,8 +48,9 @@ export class UserFormComponent implements OnInit, OnDestroy {
     public showFunding = false;
 
     constructor(private router: Router,
-                private datePipe: DatePipe,
                 private fb: FormBuilder,
+                private datePipe: DatePipe,
+                private matDialog: MatDialog,
                 private route: ActivatedRoute,
                 private userService: UserService,
                 private accountService: AccountService,
@@ -130,7 +133,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
                 balance: formatter.format(user.account?.balance)
             });
         });
-
     }
 
     onSubmit(form: FormGroup) {
@@ -203,7 +205,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
     }
 
     onShowTransaction() {
-
         if (this.showTransactions) {
             this.showTransactions = false;
         } else {
@@ -226,24 +227,21 @@ export class UserFormComponent implements OnInit, OnDestroy {
         this.datasource.loadTransactions(this.id, $event.pageIndex + 1, $event.pageSize);
     }
 
-    saveBalance() {
-        const value = this.balanceInput.nativeElement.value;
+    private getBalanceModal(id: string): MatDialogRef<BalanceModalComponent> {
+        const dialogConfig = new MatDialogConfig();
 
-        if (!value) {
-            return this.notificationService.error('Please enter a valid number for the new Balance');
-        }
+        dialogConfig.disableClose = true;
+        dialogConfig.id = 'modal-dialog';
+        dialogConfig.height = '350px';
+        dialogConfig.width = '550px';
+        dialogConfig.data = {id: id};
+        return this.matDialog.open(BalanceModalComponent, dialogConfig);
+    }
 
-        this.accountService.updateBalance(this.user.account.id, value).pipe(
-            catchError(err => this.handleError(err)),
-        ).subscribe(() => {
-            this.notificationService.success('The User Balance has been updated accordingly');
-
-            this.subscription = this.userService.findUserById(this.id).pipe(
-                catchError(err => {
-                    return throwError(err);
-                })
-            ).subscribe(user => {
-                this.user = user;
+    openBalanceModal() {
+        this.getBalanceModal(this.user.account.id).afterClosed().subscribe((result) => {
+            if (result !== 'cancel') {
+                console.log('submit selected');
 
                 const formatter = new Intl.NumberFormat('en-NG', {
                     style: 'currency',
@@ -251,9 +249,9 @@ export class UserFormComponent implements OnInit, OnDestroy {
                 });
 
                 this.userForm.patchValue({
-                    balance: formatter.format(user.account?.balance)
+                    balance: formatter.format(result)
                 });
-            });
+            }
         });
     }
 }

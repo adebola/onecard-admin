@@ -7,6 +7,7 @@ import {User} from '../model/user.model';
 import {Role} from '../model/role.model';
 import {Organization} from '../model/organization.model';
 import {WalletFund} from '../model/wallet-fund.model';
+import {SearchUserModel} from '../model/search-user.model';
 
 const USER_URL = environment.base_url + '/api/v1/user';
 const ROLE_URL = environment.base_url + '/api/v1/role';
@@ -28,6 +29,24 @@ export class UserService {
         });
     }
 
+    public findAdminUsers(pageNumber: number = 1, pageSize: number = 20): Observable<Page<User>> {
+        return this.http.get<Page<User>>(USER_URL + '/admin', {
+            params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize
+            }
+        });
+    }
+
+    public findOrdinaryUsers(pageNumber: number = 1, pageSize: number = 20): Observable<Page<User>> {
+        return this.http.get<Page<User>>(USER_URL + '/ordinary', {
+            params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize
+            }
+        });
+    }
+
     public findUserById(id: string): Observable<User> {
         return this.http.get<User>(USER_URL + '/' + id);
     }
@@ -36,12 +55,11 @@ export class UserService {
         return this.http.get<User>(USER_URL + '/self');
     }
 
-    public searchUsers(pageNumber: number, pageSize: number, searchString: string): Observable<Page<User>> {
-        return this.http.get<Page<User>>(USER_URL + '/search', {
+    public searchUsers(pageNumber: number, pageSize: number, search: Partial<SearchUserModel>): Observable<Page<User>> {
+        return this.http.post<Page<User>>(USER_URL + '/search', search, {
             params: {
                 pageNumber: pageNumber,
-                pageSize: pageSize,
-                searchString: searchString
+                pageSize: pageSize
             }
         });
     }

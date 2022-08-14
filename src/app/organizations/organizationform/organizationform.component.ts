@@ -14,6 +14,8 @@ import {catchError, finalize} from 'rxjs/operators';
 import {UserDatasource} from '../../shared/datasource/user.datasource';
 import {User} from '../../shared/model/user.model';
 import {MatSelectionList} from '@angular/material/list';
+import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
+import {BalanceModalComponent} from '../../users/modals/balance/balance-modal.component';
 
 @Component({
     selector: 'app-organization-form',
@@ -49,6 +51,7 @@ export class OrganizationFormComponent implements OnInit, OnDestroy {
     constructor(private router: Router,
                 private datePipe: DatePipe,
                 private fb: FormBuilder,
+                private matDialog: MatDialog,
                 private route: ActivatedRoute,
                 private userService: UserService,
                 private accountService: AccountService,
@@ -109,6 +112,32 @@ export class OrganizationFormComponent implements OnInit, OnDestroy {
         }
     }
 
+    openBalanceModal() {
+        this.getBalanceModal(this.organization.account.id).afterClosed().subscribe((result) => {
+            if (result !== 'cancel') {
+                const formatter = new Intl.NumberFormat('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN',
+                });
+
+                this.organizationForm.patchValue({
+                    balance: formatter.format(result)
+                });
+            }
+        });
+    }
+
+    private getBalanceModal(id: string): MatDialogRef<BalanceModalComponent> {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.id = 'modal-dialog';
+        dialogConfig.height = '350px';
+        dialogConfig.width = '550px';
+        dialogConfig.data = {id: id};
+        return this.matDialog.open(BalanceModalComponent, dialogConfig);
+    }
+
     saveBalance() {
         const value = this.balanceInput.nativeElement.value;
 
@@ -116,7 +145,7 @@ export class OrganizationFormComponent implements OnInit, OnDestroy {
             return this.notificationService.error('Please enter a valid number for the new Balance');
         }
 
-        this.accountService.updateBalance(this.organization.account.id, value).pipe(
+        this.accountService.updateBalance(this.organization.account.id, value, 'Organization').pipe(
             catchError(err => this.handleError(err)),
         ).subscribe(() => {
             this.notificationService.success('The User Balance has been updated accordingly');

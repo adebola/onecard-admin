@@ -13,7 +13,7 @@ export class FundingComponent  implements OnInit, OnDestroy, OnChanges {
     @Input() userId: string;
 
     public datasource: WalletDatasource;
-    public displayedColumns = ['amount', 'type', 'date'];
+    public displayedColumns = ['amount', 'type', 'date', 'action'];
     public busy = false;
 
     constructor(private accountService: AccountService) {}

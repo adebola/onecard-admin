@@ -53,10 +53,16 @@ export const ROUTES: RouteInfo[] = [
         ]
     },
     {
-        path: '/users/user',
+        path: '/users',
         title: 'Users',
-        type: 'link',
-        icontype: 'people'
+        type: 'sub',
+        icontype: 'people',
+        collapse: 'users',
+        children: [
+            {path: 'user', title: 'Users', ab: 'U'},
+            {path: 'adminuser', title: 'Admin Users', ab: 'A'},
+        ]
+
     },
     {
         path: '/organizations/organization',

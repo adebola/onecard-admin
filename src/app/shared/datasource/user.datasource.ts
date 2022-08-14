@@ -5,6 +5,7 @@ import {catchError, finalize} from 'rxjs/operators';
 import {UserService} from '../service/user.service';
 import {Page} from '../service/utility/page';
 import {User} from '../model/user.model';
+import {SearchUserModel} from '../model/search-user.model';
 
 export class UserDatasource implements DataSource<User> {
     public pageSize: number;
@@ -23,7 +24,6 @@ export class UserDatasource implements DataSource<User> {
     }
 
     get length() {
-
         if (this.users) {
             return this.users.length;
         }
@@ -44,36 +44,36 @@ export class UserDatasource implements DataSource<User> {
         }
     }
 
-    loadUsers(pageIndex: number, pageSize: number, searchString: string = null) {
+    loadAdminUsers(pageIndex: number, pageSize: number) {
+        this.load(this.userService.findAdminUsers(pageIndex, pageSize));
+    }
+
+    loadOrdinaryUsers(pageIndex: number, pageSize: number) {
+        this.load(this.userService.findOrdinaryUsers(pageIndex, pageSize));
+    }
+
+    loadUsers(pageIndex: number, pageSize: number, search: Partial<SearchUserModel> = null) {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
 
-        let ob$: Observable<Page<User>>;
-        if (searchString) {
-            ob$ = this.userService.searchUsers(1, 20, searchString);
+        if (search) {
+            this.load(this.userService.searchUsers(1, 20, search));
         } else {
-            ob$ = this.userService.findUsers(pageIndex, pageSize);
+            this.load(this.userService.findUsers(pageIndex, pageSize));
         }
-
-        this.subscription = ob$.pipe(
-            catchError(() => of(null)),
-            finalize(() => this.loadingSubject.next(false))
-        ).subscribe(page => {
-            this.users = page.list;
-            this.pageSize = page.pageSize;
-            this.pageNumber = page.pageNumber;
-            this.totalSize = page.totalSize;
-            this.userSubject.next(page.list);
-        });
     }
 
     loadOrganizationUsers(id: string, pageIndex = 1, pageSize = 20) {
+        this.load(this.userService.findUserByOrganizationId(id, pageIndex, pageSize));
+    }
+
+    private load(ob$: Observable<Page<User>>) {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
 
-        this.userService.findUserByOrganizationId(id, pageIndex, pageSize).pipe(
+       ob$.pipe(
             catchError(() => of(null)),
             finalize(() => this.loadingSubject.next(false))
         ).subscribe(page => {

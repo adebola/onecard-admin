@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-header card-header-warning card-header-text mb-4">
                 <div class="card-text">
-                    <h4 class="card-title">Wallet Fundings</h4>
+                    <h4 class="card-title">Wallet Funding's</h4>
                 </div>
             </div>
             <div class="card-body">
@@ -26,6 +26,12 @@
                             <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
                             <mat-cell *matCellDef="let funding">{{funding.amount | currency: "₦":"symbol":"1.0-0"}}</mat-cell>
                         </ng-container>
+
+                        <ng-container matColumnDef="action">
+                            <mat-header-cell *matHeaderCellDef>Actioned By</mat-header-cell>
+                            <mat-cell *matCellDef="let funding">{{funding.actionedBy}}</mat-cell>
+                        </ng-container>
+
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
                     </mat-table>

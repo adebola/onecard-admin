@@ -17,6 +17,15 @@ export const UserRoutes: Routes = [
         path: '',
         children: [
             {
+                path: 'adminuser',
+                component: UserListComponent
+            }
+        ]
+    },
+    {
+        path: '',
+        children: [
+            {
                 path: 'userform',
                 component: UserFormComponent
             }

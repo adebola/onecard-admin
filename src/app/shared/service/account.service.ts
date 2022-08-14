@@ -5,6 +5,7 @@ import {environment} from '../../../environments/environment';
 import {Page} from './utility/page';
 import {Account, Transaction} from '../model/account.model';
 import {WalletFund} from '../model/wallet-fund.model';
+import {NewBalanceModel} from '../model/new-balance.model';
 
 const ACCOUNT_URL = environment.base_url + '/api/v1/account';
 const TRANSACTION_URL = environment.base_url + '/api/v1/transaction';
@@ -31,9 +32,10 @@ export class AccountService {
         return this.http.get<Transaction>(TRANSACTION_URL + '/id');
     }
 
-    public updateBalance(id: string, balance: number): Observable<any> {
-        return this.http.put(ACCOUNT_URL + '/balance/' + id, {
-            balance: balance
+    public updateBalance(id: string, balance: number, narrative: string): Observable<NewBalanceModel> {
+        return this.http.put<NewBalanceModel>(ACCOUNT_URL + '/balance/' + id, {
+            balance: balance,
+            narrative: narrative
         });
     }
 

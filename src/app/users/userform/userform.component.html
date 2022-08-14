@@ -82,7 +82,7 @@
                                         </mat-form-field>
                                     </div>
                                     <div class="col-sm-4">
-                                        <button mat-raised-button class="btn btn-outline-warning text-sm-right" type="button" data-toggle="modal" data-target="#myModal">
+                                        <button mat-raised-button class="btn btn-outline-warning text-sm-right" type="button" (click)="openBalanceModal()">
                                             Manage Balance
                                         </button>
                                     </div>
@@ -113,35 +113,6 @@
                                     <button mat-raised-button class="btn btn-warning btn-fill text-sm-right" type="button" (click)="onShowFunding()">
                                         {{showFunding ? 'Hide Funding' : 'Show Funding'}}
                                     </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Manage User Balance</h4>
-                                        <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                            <i class="material-icons">clear</i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group bmd-form-group is-filled">
-                                            <div class="row">
-                                                <label class="col-sm-3 col-form-label">Balance</label>
-                                                <div class="col-md-9 col-lg-8 ml-auto mr-auto">
-                                                    <mat-form-field >
-                                                        <input matInput placeholder="Add to Balance" type="number" value=0 #balance>
-                                                    </mat-form-field>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button mat-raised-button type="button" class="btn btn-link btn-success"
-                                                data-dismiss="modal" (click)="saveBalance()">Update</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
