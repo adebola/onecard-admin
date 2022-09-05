@@ -5,10 +5,9 @@ import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {BulkRechargeDatasource} from '../../../shared/datasource/bulk-recharge.datasource';
 import {UtilityService} from '../../../shared/service/utility.service';
 import {AuthRechargeService} from '../../../shared/service/auth-recharge.service';
-import {BulkIndividualDatasource} from '../../../shared/datasource/bulk-individual.datasource';
 import {Subscription} from 'rxjs/Subscription';
 import {fromEvent} from 'rxjs';
-import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-bulk-recharges-component',
@@ -149,4 +148,16 @@ export class BulkRechargesComponent implements OnInit, OnDestroy, OnChanges {
         // this.individualDataSource.loadIndividualRequests(row.id);
     }
 
+    onDownload() {
+        this.busy = true;
+
+        this.authService.downloadBulkByUserId(this.userId).pipe(
+            finalize(() => this.busy = false)
+        ).subscribe(data => {
+            const blob = new Blob([data], {type: 'application/vnd.ms-excel'});
+            const fileURL = URL.createObjectURL(blob);
+            window.open(fileURL);
+        });
+
+    }
 }

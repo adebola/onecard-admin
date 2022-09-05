@@ -3,7 +3,7 @@ import {PageEvent} from '@angular/material/paginator';
 import {MatSelectChange} from '@angular/material/select';
 import {BulkIndividualDatasource} from '../../../shared/datasource/bulk-individual.datasource';
 import {fromEvent, throwError} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {UtilityService} from '../../../shared/service/utility.service';
 import {AuthRechargeService} from '../../../shared/service/auth-recharge.service';
@@ -43,6 +43,8 @@ export class BulkIndividualRechargeComponent implements OnInit, OnDestroy, OnCha
 
     private pageIndex = 1;
     private pageSize = 20;
+
+    public busy = false;
 
     @ViewChild('byIndividualProduct') byIndividualProduct: ElementRef<HTMLInputElement>;
     @ViewChild('byIndividualRecipient') byIndividualRecipient: ElementRef<HTMLInputElement>;
@@ -345,6 +347,18 @@ export class BulkIndividualRechargeComponent implements OnInit, OnDestroy, OnCha
             })
         ).subscribe(() => {
             this.notificationService.success('The retry request has been submitted successfully');
+        });
+    }
+
+    onIndividualDownload(bulkId: string) {
+        this.busy = true;
+
+        this.authService.downloadIndividualByBulkId(bulkId).pipe(
+            finalize(() => this.busy = false)
+        ).subscribe(data => {
+            const blob = new Blob([data], {type: 'application/vnd.ms-excel'});
+            const fileURL = URL.createObjectURL(blob);
+            window.open(fileURL);
         });
     }
 }

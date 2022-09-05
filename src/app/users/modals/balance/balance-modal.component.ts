@@ -1,20 +1,25 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {catchError} from 'rxjs/operators';
-import {throwError} from 'rxjs';
+import {catchError, finalize} from 'rxjs/operators';
+import {Observable, throwError} from 'rxjs';
 import {NotificationService} from '../../../shared/service/notification.service';
 import {AccountService} from '../../../shared/service/account.service';
-import {Provider} from '../../../shared/model/provider.model';
+import {Subscription} from 'rxjs/Subscription';
+import {MatButton} from '@angular/material/button';
 
 @Component({
     selector: 'app-balance-modal',
     templateUrl: './balance-modal.component.html',
     styleUrls: ['./balance-modal.component.css']
 })
-
 export class BalanceModalComponent implements  OnInit, OnDestroy {
+    public busy = false;
+    public selectedType = 1;
     public balanceForm: FormGroup;
+    private accountSubscription: Subscription;
+    @ViewChild('submit') submitButton: MatButton;
+    public typeOptions = [{id: 1, description: 'Top-up Balance'}, {id: 2, description: 'Adjust Balance'}];
 
     constructor(private fb: FormBuilder,
                 private accountService: AccountService,
@@ -22,8 +27,7 @@ export class BalanceModalComponent implements  OnInit, OnDestroy {
                 private notificationService: NotificationService,
                 public dialogRef: MatDialogRef<BalanceModalComponent>) { }
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.createForm();
@@ -41,38 +45,63 @@ export class BalanceModalComponent implements  OnInit, OnDestroy {
         const narrative = form.value.narrative;
         const balance = form.value.balance;
 
-        this.accountService.updateBalance(this.data.id, balance, narrative).pipe(
+        let obs$: Observable<any>;
+
+        if (this.selectedType === 1) {
+            obs$ = this.accountService.updateBalance(this.data.id, balance, narrative);
+        } else {
+            obs$ = this.accountService.adjustBalance(this.data.id, balance, narrative);
+        }
+
+        this.busyForm();
+
+        this.accountSubscription = obs$.pipe(
             catchError(err => this.handleError(err)),
+            finalize(() => this.unBusyForm())
         ).subscribe((result) => {
             if (  result.status === 200  ) {
                 this.notificationService.success('The User Balance has been updated accordingly');
-                this.dialogRef.close(result.balance);
+                this.closDialog(result.balance);
             } else {
                 this.notificationService.error(result.errMessage);
-                this.dialogRef.close('cancel');
+                this.closDialog('cancel');
             }
         });
     }
 
     onCancel() {
-        this.dialogRef.close('cancel');
+        this.closDialog('cancel');
+    }
+
+    private closDialog(status: any) {
+        if (this.accountSubscription) {
+            this.accountSubscription.unsubscribe();
+        }
+
+        this.dialogRef.close(status);
     }
 
     private createForm() {
-        console.log('DATA', this.data);
-
         this.balanceForm = this.fb.group({
             balance: [null, Validators.required],
             narrative: [null, Validators.required]
         });
     }
 
-    private handleSuccess(provider: Provider) {
-    }
-
     private handleError(err) {
         this.notificationService.error(err.error.message);
         console.log(err);
+        this.closDialog('cancel');
         return throwError(err);
+    }
+
+    private busyForm() {
+        this.busy = true;
+        this.submitButton.disabled = true;
+    }
+
+    private unBusyForm() {
+        this.busy = false;
+        this.submitButton.disabled = false;
     }
 }

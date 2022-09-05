@@ -1,15 +1,27 @@
 <div class="card">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
     <form [formGroup]="balanceForm" (ngSubmit)="onSubmit(balanceForm)" class="form-horizontal">
-        <div class="card-header card-header-warning card-header-text">
-            <div class="card-text">
-                <h4 class="card-title">Manage Balance</h4>
-            </div>
-        </div>
-
         <div class="card-body">
+
             <div class="row">
-                <label class="col-sm-3 col-form-label">Balance</label>
-                <div class="col-md-9 col-lg-8 ml-auto mr-auto">
+                <label class="col-md-2 col-form-label">Type</label>
+                <div class="col-md-4" style="max-width: 150px;">
+                    <mat-form-field>
+                        <mat-select [(value)]="selectedType">
+                            <mat-option *ngFor="let type of typeOptions"
+                                        [value]="type.id">
+                                {{type.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Balance</label>
+                <div class="col-md-10">
                     <mat-form-field>
                         <input matInput formControlName="balance" placeholder="Add to Balance" type="number" value=0
                                required>
@@ -25,26 +37,24 @@
                     </mat-form-field>
                 </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card-footer text-center">
+                        <button mat-raised-button type="submit" class="btn btn-outline-warning btn-fill text-sm-right" #submit>
+                            OK
+                        </button>
+                    </div>
+                </div>
 
-        <div class="row">
-            <div class="col-4">
-                <div class="card-footer text-center">
-                    <button mat-raised-button type="submit" class="btn btn-outline-warning btn-fill text-sm-right">OK
-                    </button>
+                <div class="col-4">
+                    <div class="card-footer text-center">
+                        <button mat-raised-button class="btn btn-outline-warning btn-fill text-sm-right" type="button"
+                                (click)="onCancel()">
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </div>
-
-            <div class="col-4">
-                <div class="card-footer text-center">
-                    <button mat-raised-button class="btn btn-outline-warning btn-fill text-sm-right" type="button"
-                            (click)="onCancel()">
-                        Cancel
-                    </button>
-                </div>
-            </div>
-
         </div>
-
     </form>
 </div>

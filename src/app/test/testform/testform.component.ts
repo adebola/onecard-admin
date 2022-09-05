@@ -233,7 +233,7 @@ export class TestFormComponent {
         }
 
         this.busy = true;
-        this.pushFile(this.selectedFile, environment.base_url + '/api/v1/auth-recharge/bulkfile')
+        this.pushFile(this.selectedFile, environment.base_url + '/api/v1/auth-recharge/bulk/file')
             .subscribe(x => console.log('X', x));
     }
 

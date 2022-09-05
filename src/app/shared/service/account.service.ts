@@ -6,6 +6,8 @@ import {Page} from './utility/page';
 import {Account, Transaction} from '../model/account.model';
 import {WalletFund} from '../model/wallet-fund.model';
 import {NewBalanceModel} from '../model/new-balance.model';
+import {AdjustResponse} from '../model/adjust.model';
+import {exhaustMap} from 'rxjs/operators';
 
 const ACCOUNT_URL = environment.base_url + '/api/v1/account';
 const TRANSACTION_URL = environment.base_url + '/api/v1/transaction';
@@ -37,6 +39,10 @@ export class AccountService {
             balance: balance,
             narrative: narrative
         });
+    }
+
+    public adjustBalance(id: string, amount: number, narrative: string): Observable<AdjustResponse> {
+        return this.http.post<AdjustResponse>(ACCOUNT_URL + '/adjust', {accountId: id, amount, narrative});
     }
 
     findWalletFundings(userId: string, pageNumber: number, pageSize: number): Observable<Page<WalletFund>> {

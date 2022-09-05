@@ -1,4 +1,7 @@
 <div class="mx-0 px-0">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
     <div class="card-body">
         <div class="row">
             <h4>&nbsp;</h4>
@@ -124,6 +127,14 @@
             >
             </mat-paginator>
         </div>
+        <div class="row mt-2">
+            <div class="col-12">
+                <button class="btn btn-warning" (click)="onDownload()" *ngIf="singleDatasource && singleDatasource.length > 0">
+                    Download
+                </button>
+            </div>
+        </div>
+
         <ng-template #loading>
             Loading Please Wait...
         </ng-template>

@@ -1,0 +1,80 @@
+<div class="card">
+    <form [formGroup]="rechargeForm" (ngSubmit)="onSubmit(rechargeForm)" class="form-horizontal">
+        <div class="card-header card-header-warning card-header-text">
+            <div class="card-text">
+                <h4 class="card-title">Manage Provider Services</h4>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row" *ngIf="data.mode === 'add'">
+                <label class="col-md-4 col-form-label">Provider</label>
+                <div class="col-md-6" style="max-width: 150px;">
+                    <mat-form-field>
+                        <mat-select (selectionChange)="onProviderChange($event)" formControlName="provider">
+                            <mat-option *ngFor="let recharge of rechargeProvider$ | async"
+                                        [value]="recharge.id">
+                                {{recharge.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="data.mode === 'edit'">
+                <label class="col-md-4 col-form-label">Provider</label>
+                <div class="col-md-6" style="max-width: 150px;">
+                    <mat-form-field>
+                        <mat-select (selectionChange)="onProviderChange($event)" formControlName="provider" [disabled]="true">
+                            <mat-option *ngFor="let recharge of rechargeProvider$ | async"
+                                        [value]="recharge.id">
+                                {{recharge.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-md-4 col-form-label">Service</label>
+                <div class="col-md-6" style="max-width: 150px;">
+                    <mat-form-field>
+                        <mat-select (selectionChange)="onServiceChange($event)" formControlName="service" [disabled]="true">
+                            <mat-option *ngFor="let service of serviceProvider$ | async"
+                                        [value]="service.id">
+                                {{service.serviceName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Priority</label>
+                <div class="col-sm-10">
+                    <mat-form-field class="example-full-width has-label">
+                        <input matInput placeholder="Priority" type="number" value="1" formControlName="priority">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+                <div class="card-footer text-center">
+                    <button mat-raised-button type="submit" class="btn btn-outline-warning btn-fill text-sm-right">OK
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="card-footer text-center">
+                    <button mat-raised-button class="btn btn-outline-warning btn-fill text-sm-right" type="button"
+                            (click)="onCancel()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -93,7 +93,7 @@
                             <div class="col-6">
                                 <div class="card-footer text-center d-flex" style="justify-content: flex-end"
                                      *ngIf="editMode; else savetemplate">
-                                    <button mat-raised-button type="submit"
+                                    <button mat-raised-button type="submit" #submit
                                             class="btn btn-warning btn-fill text-sm-right"
                                             style="align-content: flex-end">Update Organization
                                     </button>
@@ -162,7 +162,7 @@
 
                         <ng-template #savetemplate>
                             <div class="card-footer text-center d-flex" style="justify-content: flex-end">
-                                <button mat-raised-button type="submit" class="btn btn-warning btn-fill">Create
+                                <button mat-raised-button type="submit" class="btn btn-warning btn-fill" #submit>Create
                                     Organization
                                 </button>
                             </div>

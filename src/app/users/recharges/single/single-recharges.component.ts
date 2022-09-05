@@ -2,7 +2,7 @@ import {Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChange
 import {MatSelectChange} from '@angular/material/select';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {fromEvent, throwError} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {SingleRechargeDatasource} from '../../../shared/datasource/single-recharge.datasource';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
@@ -235,5 +235,17 @@ export class SingleRechargesComponent implements OnInit, OnDestroy, OnChanges {
         dialogConfig.data = data;
 
         return dialogConfig;
+    }
+
+    onDownload() {
+        this.authService.downloadSingleFailedByUserId(this.userId).pipe(
+            finalize(() => this.busy = false)
+        ).subscribe(data => {
+            console.log(data);
+            const blob = new Blob([data], {type: 'application/vnd.ms-excel'});
+            const fileURL = URL.createObjectURL(blob);
+            this.busy = false;
+            window.open(fileURL);
+        });
     }
 }

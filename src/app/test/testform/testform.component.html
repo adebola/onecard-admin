@@ -43,6 +43,7 @@
         Get AutoRecharge
     </button>
 
+
     <button (click)="getAutoRecharges()" class="btn btn-warning btn-fill">
         Get Auto Recharges
     </button>
@@ -66,8 +67,7 @@
 
         <label style="display: block" *ngIf="selectedFile">File Selected {{selectedFile.name}}</label>
         <button (click)="hiddenFileInput.click()" type="button" class="btn btn-warning btn-lg mr-3">
-            Select XLS
-            File
+            Select XLS File
         </button>
         <button (click)="onSubmit()" type="submit" class="btn btn-info btn-lg">Upload File</button>
     </form>

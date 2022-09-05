@@ -6,7 +6,7 @@ import {BulkRechargeDatasource} from '../../shared/datasource/bulk-recharge.data
 import {PageEvent} from '@angular/material/paginator';
 import {MatSelectChange} from '@angular/material/select';
 import {fromEvent} from 'rxjs';
-import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {ActivatedRoute} from '@angular/router';
 
@@ -31,6 +31,7 @@ export class FailedBulkComponent implements OnInit, OnDestroy, OnChanges {
     public showIndividualRequests = false;
     public bulkColumns = ['id', 'servicecost', 'date'];
     private byBulkIdSubscription: Subscription;
+    private routeUrlSubscription: Subscription;
 
     private bulkPageIndex = 1;
     private bulkPageSize = 20;
@@ -53,10 +54,14 @@ export class FailedBulkComponent implements OnInit, OnDestroy, OnChanges {
         if (this.byBulkIdSubscription) {
             this.byBulkIdSubscription.unsubscribe();
         }
+
+        if (this.routeUrlSubscription) {
+            this.routeUrlSubscription.unsubscribe();
+        }
     }
 
     ngOnInit(): void {
-        this.route.url.subscribe(params => {
+        this.routeUrlSubscription = this.route.url.subscribe(params => {
             if (params[0].path === 'bulk_unresolved') {
                 this.unresolved = true;
                 this.type = 'failed-unresolved';
@@ -162,5 +167,16 @@ export class FailedBulkComponent implements OnInit, OnDestroy, OnChanges {
         } else {
             this.bulkDataSource.loadFailedRecharges();
         }
+    }
+
+    onBulkDownload() {
+        this.authService.downloadBulkFailed(this.unresolved ? 'unresolved' : 'all').pipe(
+            finalize(() => this.busy = false)
+        ).subscribe(data => {
+            const blob = new Blob([data], {type: 'application/vnd.ms-excel'});
+            const fileURL = URL.createObjectURL(blob);
+            this.busy = false;
+            window.open(fileURL);
+        });
     }
 }

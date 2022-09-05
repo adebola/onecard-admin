@@ -4,6 +4,8 @@ import {RechargeProviderDatasource} from '../rechargeproviderlist/recharge-provi
 import {NotificationService} from '../../shared/service/notification.service';
 import {catchError} from 'rxjs/operators';
 import {throwError} from 'rxjs';
+import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
+import {RechargeProviderModalComponent} from '../modals/rechargeprovider/recharge-provider-modal.component';
 
 @Component({
     selector: 'app-provider-details',
@@ -11,19 +13,19 @@ import {throwError} from 'rxjs';
     styleUrls: ['./provider-details.component.css']
 })
 export class ProviderDetailsComponent implements OnInit, OnDestroy {
-
     @Input()
     serviceId: number;
 
-    constructor(private providerService: ProviderService,
+    constructor(private matDialog: MatDialog,
+                private providerService: ProviderService,
                 private notificationService: NotificationService) {}
 
+    public priority: number = null;
     public selectedRowIndex = -1;
     public datasource: RechargeProviderDatasource;
-    public dislayedColumns = ['id', 'name', 'code', 'priority'];
+    public displayedColumns = ['name', 'code', 'priority'];
 
-    ngOnDestroy(): void {
-    }
+    ngOnDestroy(): void {}
 
     ngOnInit(): void {
         this.loadDataSource(this.serviceId.toString());
@@ -38,10 +40,7 @@ export class ProviderDetailsComponent implements OnInit, OnDestroy {
 
     highlight(row) {
         this.selectedRowIndex = row.id;
-    }
-
-    addProvider() {
-
+        this.priority = row.weight;
     }
 
     removeProvider() {
@@ -59,5 +58,45 @@ export class ProviderDetailsComponent implements OnInit, OnDestroy {
                 this.notificationService.success('The Recharge Provider has been removed');
                 this.selectedRowIndex = 0;
             });
+    }
+
+   addProvider() {
+       this.getRechargeProviderModal('add').afterClosed().subscribe(result => {
+           if (result === 'submit') {
+               this.refresh();
+           }
+       });
+   }
+
+   editProvider() {
+       if (this.selectedRowIndex <= 0) {
+           return this.notificationService.error('Please select a Recharge Provider to edit');
+       }
+
+       this.getRechargeProviderModal('edit').afterClosed().subscribe(result => {
+           if (result === 'submit') {
+               this.refresh();
+           }
+       });
+   }
+
+    private getRechargeProviderModal(mode: string): MatDialogRef<RechargeProviderModalComponent> {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.id = 'modal-dialog';
+        dialogConfig.height = '385px';
+        dialogConfig.width = '420px';
+        dialogConfig.data = {
+            serviceId: this.serviceId,
+            providerId: this.selectedRowIndex > 0 ?  this.selectedRowIndex : null,
+            priority: this.priority,
+            mode: mode
+        };
+        return this.matDialog.open(RechargeProviderModalComponent, dialogConfig);
+    }
+
+    private refresh() {
+        this.loadDataSource(this.serviceId.toString());
     }
 }

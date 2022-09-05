@@ -232,7 +232,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
         dialogConfig.disableClose = true;
         dialogConfig.id = 'modal-dialog';
-        dialogConfig.height = '350px';
+        dialogConfig.height = '400px';
         dialogConfig.width = '550px';
         dialogConfig.data = {id: id};
         return this.matDialog.open(BalanceModalComponent, dialogConfig);

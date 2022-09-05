@@ -1,4 +1,7 @@
 <div class ="m-0 p-0">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
     <div class="mx-2" style="align-items: center">
         <p>Individual Requests for Bulk recharge {{bulkId}}</p>
     </div>
@@ -128,11 +131,24 @@
         </mat-paginator>
     </div>
     <div class="row">
-        <div class="col-md-6"></div>
-        <div class="col-md-6" style="text-align: end;">
-            <button (click)="retryAll(bulkId)" mat-raised-button class="btn btn-sm btn-outline-warning" type="button">Retry</button>
-            <button (click)="refundAll()" mat-raised-button class="btn btn-sm btn-outline-warning" type="button">Refund</button>
-            <button (click)="resolveAll()"  mat-raised-button class="btn btn-sm btn-outline-warning" style="margin-right: 5px;" type="button">Resolve</button>
+        <div class="col-md-2">
+
+        </div>
+        <div class="col-md-10" style="text-align: end;">
+            <button *ngIf="individualDataSource && individualDataSource.length > 0"
+                    (click)="onIndividualDownload(bulkId)"
+                    mat-raised-button class="btn btn-sm btn-outline-warning mr-5" type="button">
+                Download
+            </button>
+            <button (click)="retryAll(bulkId)" mat-raised-button class="btn btn-sm btn-outline-warning" type="button">
+                Retry
+            </button>
+            <button (click)="refundAll()" mat-raised-button class="btn btn-sm btn-outline-warning" type="button">
+                Refund
+            </button>
+            <button (click)="resolveAll()"  mat-raised-button class="btn btn-sm btn-outline-warning" style="margin-right: 5px;" type="button">
+                Resolve
+            </button>
         </div>
     </div>
     <ng-template #loading>

@@ -9,4 +9,5 @@ export interface RechargeProvider {
     createdBy: string;
     createdDate: string;
     suspended: boolean;
+    weight: number;
 }

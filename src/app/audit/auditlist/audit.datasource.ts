@@ -45,6 +45,7 @@ export class AuditDatasource implements DataSource<Audit> {
     disconnect(collectionViewer: CollectionViewer): void {
         this.auditSubject.complete();
         this.loadingSubject.complete();
+        this.subscription.unsubscribe();
     }
 
     loadAudits(pageIndex = 0, pageSize = 20, searchString: string = null) {

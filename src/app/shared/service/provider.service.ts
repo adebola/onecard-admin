@@ -5,6 +5,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {Page} from './utility/page';
 import {Action, Provider, ProviderCategory, ServiceAction} from '../model/provider.model';
 import {RechargeProvider} from '../model/recharge-provider.model';
+import {ProviderServiceModel} from '../model/provider-services.model';
 
 const PROVIDER_URL = environment.base_url + '/api/v1/provider';
 const PROVIDER_SERVICE_URL = environment.base_url + '/api/v1/provider/service';
@@ -21,7 +22,6 @@ export class ProviderService {
     constructor(private http: HttpClient) {}
 
     public getProviders(pageNumber: number = 1, pageSize: number = 20): Observable<Page<Provider>> {
-
         return this.http.get<Page<Provider>>(PROVIDER_URL, {
             params: {
                 pageNumber: pageNumber,
@@ -31,7 +31,6 @@ export class ProviderService {
     }
 
     public searchProviders(pageNumber: number = 1, pageSize: number = 20, searchString: string): Observable<Page<Provider>> {
-
         return this.http.get<Page<Provider>>(PROVIDER_URL + '/search', {
             params: {
                 pageNumber: pageNumber,
@@ -54,7 +53,6 @@ export class ProviderService {
     }
 
     public getProviderCategories(pageNumber: number = 1, pageSize: number = 20): Observable<Page<ProviderCategory>> {
-
         return this.http.get<Page<ProviderCategory>>(PROVIDER_CATEGORY_URL, {
             params: {
                 pageNumber: pageNumber,
@@ -65,7 +63,6 @@ export class ProviderService {
 
     public searchProviderCategories(pageNumber: number = 1, pageSize: number = 20,
                                     searchString: string): Observable<Page<ProviderCategory>> {
-
         return this.http.get<Page<ProviderCategory>>(PROVIDER_CATEGORY_URL + '/search', {
             params: {
                 pageNumber: pageNumber,
@@ -141,7 +138,7 @@ export class ProviderService {
         return this.http.get<RechargeProvider[]>(PROVIDER_RECHARGE_URL + '/service/' + id);
     }
 
-    public getAllRechargeProviders(pageNumber: number = 1, pageSize: number = 20): Observable<Page<RechargeProvider>> {
+    public getAllRechargeProviders(pageNumber: number, pageSize: number): Observable<Page<RechargeProvider>> {
         return this.http.get<Page<RechargeProvider>>(PROVIDER_RECHARGE_URL);
     }
 
@@ -162,11 +159,31 @@ export class ProviderService {
         });
     }
 
-    public addRechargeProviderToService(rechargeId: string, serviceId: string): Observable<any> {
-        return this.http.get(PROVIDER_SERVICE_URL + '/add', {
+    public addRechargeProviderToService(rechargeId: number,
+                                        serviceId: number,
+                                        priority: number): Observable<{status: number, message: string}> {
+        return this.http.post<{status: number, message: string}>(PROVIDER_SERVICE_URL + '/add', {
+            rechargeId: rechargeId,
+            serviceId: serviceId,
+            priority: priority
+        });
+    }
+
+    public amendRechargeProviderService(rechargeId: number,
+                                        serviceId: number,
+                                        priority: number): Observable<{status: number, message: string}> {
+        return this.http.put<{status: number, message: string}>(PROVIDER_SERVICE_URL + '/amend', {
+            rechargeId: rechargeId,
+            serviceId: serviceId,
+            priority: priority
+        });
+    }
+
+    public getAllServices(pageNumber: number, pageSize: number): Observable<Page<ProviderServiceModel>> {
+        return this.http.get<Page<ProviderServiceModel>>(PROVIDER_SERVICE_URL + '/all', {
             params: {
-                rechargeId: rechargeId,
-                serviceId: serviceId,
+                pageNumber: pageNumber,
+                pageSize: pageSize
             }
         });
     }

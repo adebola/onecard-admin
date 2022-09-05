@@ -15,10 +15,11 @@ import {MessageModel} from '../model/message.model';
 const SINGLE_AUTH_RECHARGE_URL = environment.base_url + '/api/v1/auth-recharge';
 const BULK_AUTH_RECHARGE_URL = environment.base_url + '/api/v1/auth-recharge/bulk';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class AuthRechargeService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+    }
 
     public getUserSingleRecharges(userId: string, pageNumber: number = 1, pageSize: number = 20): Observable<Page<SingleRecharge>> {
         return this.http.get<Page<SingleRecharge>>(SINGLE_AUTH_RECHARGE_URL + '/singlelist/' + userId, {
@@ -200,6 +201,52 @@ export class AuthRechargeService {
                 pageNumber: pageNumber,
                 pageSize: pageSize,
             }
+        });
+    }
+
+    public downloadSingleFailed(type: string): Observable<any> {
+        return this.http.get(SINGLE_AUTH_RECHARGE_URL + '/single/downloadfailed', {
+            params: {
+                type: type
+            },
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    public downloadSingleFailedByUserId(id: string): Observable<any> {
+        return this.http.get(SINGLE_AUTH_RECHARGE_URL + '/single/download/' + id, {
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    public downloadBulkFailed(type: string): Observable<any> {
+        return this.http.get(BULK_AUTH_RECHARGE_URL + '/download-failed', {
+            params: {
+                type: type
+            },
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    public downloadBulkIndividualFailed(id: string, type: string): Observable<any> {
+        return this.http.get(BULK_AUTH_RECHARGE_URL + '/download-failed-individual', {
+            params: {
+                id: id,
+                type: type
+            },
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    public downloadBulkByUserId(id: string): Observable<any> {
+        return this.http.get(BULK_AUTH_RECHARGE_URL + '/download-user-bulk/' + id, {
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    public downloadIndividualByBulkId(id: string): Observable<any> {
+        return this.http.get(BULK_AUTH_RECHARGE_URL + '/download-user-individual/' + id, {
+            responseType: 'blob' as 'json'
         });
     }
 }

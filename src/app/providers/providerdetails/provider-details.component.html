@@ -5,10 +5,6 @@
                 <div class="table-responsive">
                     <mat-table matSort matSortDirection="asc" [dataSource]="datasource"
                                *ngIf="!(datasource.loading$ | async); else loading">
-                        <ng-container matColumnDef="id">
-                            <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
-                            <mat-cell *matCellDef="let recharge">{{recharge.id}}</mat-cell>
-                        </ng-container>
 
                         <ng-container matColumnDef="name">
                             <mat-header-cell mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
@@ -20,41 +16,17 @@
                             <mat-cell *matCellDef="let recharge">{{recharge.code}}</mat-cell>
                         </ng-container>
 
-                        <mat-header-row *matHeaderRowDef="dislayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: dislayedColumns"
+                        <ng-container matColumnDef="priority">
+                            <mat-header-cell mat-header-cell *matHeaderCellDef>Priority</mat-header-cell>
+                            <mat-cell *matCellDef="let recharge">{{recharge.weight}}</mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns"
                                  [ngClass]="{'highlight': selectedRowIndex == row.id}"
                                  (click)="highlight(row)">
                         </mat-row>
                     </mat-table>
-
-                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Select Provider</h4>
-                                    <button mat-button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                        <i class="material-icons">clear</i>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group bmd-form-group is-filled">
-                                        <div class="row">
-                                            <label class="col-sm-3 col-form-label">Balance</label>
-                                            <div class="col-md-9 col-lg-8 ml-auto mr-auto">
-                                                <mat-form-field >
-                                                    <input matInput placeholder="New Balance" type="number" value="test"#balance>
-                                                </mat-form-field>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button mat-raised-button type="button" class="btn btn-link">Save</button>
-                                    <button mat-raised-button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <ng-template #loading>
                         Loading Please Wait...
@@ -62,8 +34,11 @@
                 </div>
             </div>
             <div class="card-footer d-flex" style="justify-content: end;">
-                <button mat-raised-button class="btn btn-success" type="button" data-toggle="modal" data-target="#myModal">
+                <button mat-raised-button class="btn btn-success mr-2" type="button" (click)="addProvider()">
                     Add
+                </button>
+                <button mat-raised-button class="btn btn-warning mr-2" type="button" (click)="editProvider()">
+                    Edit
                 </button>
                 <button mat-raised-button type="button"
                         class="btn btn-danger btn-fill" (click)="removeProvider()">

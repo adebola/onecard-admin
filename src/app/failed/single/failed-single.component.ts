@@ -8,7 +8,7 @@ import {NotificationService} from '../../shared/service/notification.service';
 import {MatSelectChange} from '@angular/material/select';
 import {MatDatepickerInputEvent} from '@angular/material/datepicker';
 import {fromEvent, throwError} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
 import {ResolveModalComponent} from '../../users/modals/resolve/resolve-modal.component';
 import {RetryModalComponent} from '../../users/modals/retry/retry-modal.component';
 import {PageEvent} from '@angular/material/paginator';
@@ -273,5 +273,18 @@ export class FailedSingleComponent implements OnInit, OnDestroy, OnChanges {
         dialogConfig.data = data;
 
         return dialogConfig;
+    }
+
+    onDownload() {
+        this.busy = true;
+
+        this.authService.downloadSingleFailed(this.unresolved ? 'unresolved' : 'all').pipe(
+            finalize(() => this.busy = false)
+        ).subscribe(data => {
+            const blob = new Blob([data], {type: 'application/vnd.ms-excel'});
+            const fileURL = URL.createObjectURL(blob);
+            this.busy = false;
+            window.open(fileURL);
+        });
     }
 }

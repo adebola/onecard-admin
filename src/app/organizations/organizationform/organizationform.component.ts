@@ -16,6 +16,7 @@ import {User} from '../../shared/model/user.model';
 import {MatSelectionList} from '@angular/material/list';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {BalanceModalComponent} from '../../users/modals/balance/balance-modal.component';
+import {MatButton} from '@angular/material/button';
 
 @Component({
     selector: 'app-organization-form',
@@ -44,7 +45,7 @@ export class OrganizationFormComponent implements OnInit, OnDestroy {
     public userDatasource: UserDatasource;
     public userColumns = ['username', 'email', 'firstname', 'lastname', 'actions'];
 
-    @ViewChild('balance') balanceInput: ElementRef;
+    @ViewChild('submit') submitButton: MatButton;
     @ViewChild('availableusers') availableUsers: MatSelectionList;
     @ViewChild('assignedusers') assignedUsers: MatSelectionList;
 
@@ -96,9 +97,11 @@ export class OrganizationFormComponent implements OnInit, OnDestroy {
             });
         }
 
+       this.busyForm();
+
         obs$.pipe(
             catchError(err => this.handleError(err)),
-            finalize(() => this.busy = false)
+            finalize(() => this.unBusyForm())
         ).subscribe(organization => this.handleSuccess(organization));
     }
 
@@ -136,37 +139,6 @@ export class OrganizationFormComponent implements OnInit, OnDestroy {
         dialogConfig.width = '550px';
         dialogConfig.data = {id: id};
         return this.matDialog.open(BalanceModalComponent, dialogConfig);
-    }
-
-    saveBalance() {
-        const value = this.balanceInput.nativeElement.value;
-
-        if (!value) {
-            return this.notificationService.error('Please enter a valid number for the new Balance');
-        }
-
-        this.accountService.updateBalance(this.organization.account.id, value, 'Organization').pipe(
-            catchError(err => this.handleError(err)),
-        ).subscribe(() => {
-            this.notificationService.success('The User Balance has been updated accordingly');
-
-            this.subscription = this.userService.findOrganizationById(this.id).pipe(
-                catchError(err => {
-                    return throwError(err);
-                })
-            ).subscribe(org => {
-                this.organization = org;
-
-                const formatter = new Intl.NumberFormat('en-NG', {
-                    style: 'currency',
-                    currency: 'NGN',
-                });
-
-                this.organizationForm.patchValue({
-                    balance: formatter.format(org.account?.balance)
-                });
-            });
-        });
     }
 
     logEventTransactions($event: PageEvent) {
@@ -296,7 +268,13 @@ export class OrganizationFormComponent implements OnInit, OnDestroy {
         });
     }
 
-    test() {
-        console.log('TEST');
+    private busyForm() {
+        this.busy = true;
+        this.submitButton.disabled = true;
+    }
+
+    private unBusyForm() {
+        this.busy = false;
+        this.submitButton.disabled = false;
     }
 }

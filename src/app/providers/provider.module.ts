@@ -9,9 +9,9 @@ import {ProviderFormComponent} from './providerform/provider-form.component';
 import {ProviderCategoryListComponent} from './providercategorylist/provider-category-list.component';
 import {CategoryFormComponent} from './categoryform/category-form.component';
 import {ProviderDetailsComponent} from './providerdetails/provider-details.component';
-import {AddProviderComponent} from './addProvider/addprovider.component';
 import {RechargeProviderListComponent} from './rechargeproviderlist/recharge-provider-list.component';
 import {RechargeProviderFormComponent} from './rechargeproviderform/recharge-provider-form.component';
+import {RechargeProviderModalComponent} from './modals/rechargeprovider/recharge-provider-modal.component';
 
 @NgModule({
     imports: [
@@ -28,9 +28,9 @@ import {RechargeProviderFormComponent} from './rechargeproviderform/recharge-pro
         ProviderCategoryListComponent,
         CategoryFormComponent,
         ProviderDetailsComponent,
-        AddProviderComponent,
         RechargeProviderListComponent,
-        RechargeProviderFormComponent
+        RechargeProviderFormComponent,
+        RechargeProviderModalComponent
     ]
 })
 export class ProviderModule {}
