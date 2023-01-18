@@ -3,7 +3,7 @@ import {environment} from '../../../environments/environment';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Report} from '../model/report.model';
+import {RechargeReportRequest, Report} from '../model/report.model';
 
 const REPORT_URL = environment.base_url + '/api/v1/reports';
 
@@ -38,5 +38,11 @@ export class ReportService {
 
     public findById(id: string): Observable<Report> {
         return this.http.get<Report>(REPORT_URL + '/' + id);
+    }
+
+    public runRechargeReport(request: Partial<RechargeReportRequest>): Observable<any> {
+        return this.http.post(REPORT_URL + '/recharge', request, {
+            responseType: 'blob' as 'json'
+        });
     }
 }

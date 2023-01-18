@@ -1,10 +1,11 @@
 export interface SearchSingleRecharge {
     userId: string;
-    searchDate: string;
-    searchRecipient: string;
-    searchProduct: string;
-    pageNumber: number;
-    pageSize: number;
+    rechargeId: string;
+    startDate: string;
+    endDate: string;
+    recipient: string;
+    product: string;
+    failed: boolean;
 }
 
 export interface SearchSingleFailedRecharge {

@@ -6,8 +6,8 @@ import {Page} from './utility/page';
 import {User} from '../model/user.model';
 import {Role} from '../model/role.model';
 import {Organization} from '../model/organization.model';
-import {WalletFund} from '../model/wallet-fund.model';
 import {SearchUserModel} from '../model/search-user.model';
+import {SimpleUser} from '../model/simple-user.model';
 
 const USER_URL = environment.base_url + '/api/v1/user';
 const ROLE_URL = environment.base_url + '/api/v1/role';
@@ -19,6 +19,9 @@ export class UserService {
     constructor(private http: HttpClient) {}
 
     // User Functions
+    public findUsersNonPaged(): Observable<SimpleUser[]> {
+        return this.http.get<SimpleUser[]>(USER_URL + '/nopage');
+    }
 
     public findUsers(pageNumber: number = 1, pageSize: number = 20): Observable<Page<User>> {
         return this.http.get<Page<User>>(USER_URL, {
@@ -70,6 +73,10 @@ export class UserService {
 
     public updateSelf(user: Partial<User>): Observable<any> {
         return this.http.put(USER_URL + '/self', user);
+    }
+
+    public toggleUserActivation(id: string): Observable<any> {
+        return this.http.put(USER_URL + '/activate/' + id, {});
     }
 
     // Role Functions

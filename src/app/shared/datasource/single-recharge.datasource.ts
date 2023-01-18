@@ -75,8 +75,8 @@ export class SingleRechargeDatasource implements DataSource<SingleRecharge> {
         });
     }
 
-    search(search: Partial<SearchSingleRecharge>) {
-        this.load(this.authService.searchSingleRecharge(search));
+    search(search: Partial<SearchSingleRecharge>,  pageNumber: number = 1, pageSize: number = 20) {
+        this.load(this.authService.searchSingleRecharge(search, pageNumber, pageSize));
     }
 
     searchFailed(search: Partial<SearchSingleFailedRecharge>, pageNumber: number = 1, pageSize: number = 20) {

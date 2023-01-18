@@ -16,6 +16,7 @@ import {User} from '../../shared/model/user.model';
 import {Role} from '../../shared/model/role.model';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {BalanceModalComponent} from '../modals/balance/balance-modal.component';
+import {MatCheckboxChange} from '@angular/material/checkbox';
 
 @Component({
     selector: 'app-user-form',
@@ -28,6 +29,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
     public id: string = null;
     public userForm: FormGroup;
     private subscription: Subscription;
+    private activateSubscription: Subscription;
     public user: User;
 
     private allRolesSubject = new BehaviorSubject<Role[]>(null);
@@ -57,9 +59,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
                 private notificationService: NotificationService) {}
 
     ngOnDestroy(): void {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
+        if (this.subscription) { this.subscription.unsubscribe(); }
+        if (this.activateSubscription) { this.activateSubscription.unsubscribe(); }
 
         this.allRolesSubject.complete();
         this.assignedRolesSubject.complete();
@@ -253,5 +254,11 @@ export class UserFormComponent implements OnInit, OnDestroy {
                 });
             }
         });
+    }
+
+    onEnabledChange($event: MatCheckboxChange) {
+        console.log('Checked', $event.checked);
+        if (this.activateSubscription) { this.activateSubscription.unsubscribe(); }
+        this.activateSubscription = this.userService.toggleUserActivation(this.id).subscribe();
     }
 }

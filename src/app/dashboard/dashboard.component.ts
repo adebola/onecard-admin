@@ -174,7 +174,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
          showTooltip: true,
          onRegionClick: function(element, code, region)
          {
-             var message = 'You clicked "'
+             const message = 'You clicked "'
                  + region
                  + '" which has the code: '
                  + code.toUpperCase();

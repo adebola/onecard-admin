@@ -15,6 +15,7 @@ import {BulkIndividualRechargeComponent} from './recharges/bulk-individual/bulk-
 import {RetryModalComponent} from './modals/retry/retry-modal.component';
 import {ResolveModalComponent} from './modals/resolve/resolve-modal.component';
 import {BalanceModalComponent} from './modals/balance/balance-modal.component';
+import {CombinedRechargeComponent} from './recharges/combined/combined-recharge.component';
 
 @NgModule({
     imports: [
@@ -40,7 +41,8 @@ import {BalanceModalComponent} from './modals/balance/balance-modal.component';
         BulkIndividualRechargeComponent,
         RetryModalComponent,
         ResolveModalComponent,
-        BalanceModalComponent
+        BalanceModalComponent,
+        CombinedRechargeComponent
     ]
 })
 export class UserModule {}

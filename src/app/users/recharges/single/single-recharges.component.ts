@@ -99,10 +99,8 @@ export class SingleRechargesComponent implements OnInit, OnDestroy, OnChanges {
 
         this.singleDatasource.search({
             userId: this.userId,
-            pageNumber: 1,
-            pageSize: 20,
-            searchDate: this.utilityService.stringifyDate(this.rechargeDate)
-        });
+            startDate: this.utilityService.stringifyDate(this.rechargeDate)
+        }, 1, 20);
     }
 
     private initByRecipient() {
@@ -121,10 +119,8 @@ export class SingleRechargesComponent implements OnInit, OnDestroy, OnChanges {
                         this.mainSingleGrid = false;
                         this.singleDatasource.search({
                             userId: this.userId,
-                            pageNumber: 1,
-                            pageSize: 20,
-                            searchRecipient: this.searchRecipient
-                        });
+                            recipient: this.searchRecipient
+                        }, 1 , 20);
                     } else {
                         this.mainSingleGrid = true;
                         this.singleDatasource.loadRecharges(this.userId);
@@ -148,10 +144,8 @@ export class SingleRechargesComponent implements OnInit, OnDestroy, OnChanges {
                         this.mainSingleGrid = false;
                         this.singleDatasource.search({
                             userId: this.userId,
-                            pageNumber: 1,
-                            pageSize: 20,
-                            searchProduct: this.searchProduct
-                        });
+                            product: this.searchProduct
+                        }, 1 , 20);
                     } else {
                         this.mainSingleGrid = true;
                         this.singleDatasource.loadRecharges(this.userId);
@@ -169,7 +163,7 @@ export class SingleRechargesComponent implements OnInit, OnDestroy, OnChanges {
             })
         ).subscribe(m => {
             this.notificationService.success(m.message);
-            this.singleDatasource.loadRecharges(this.userId, this.singlePageIndex, this.singlePageSize)
+            this.singleDatasource.loadRecharges(this.userId, this.singlePageIndex, this.singlePageSize);
         });
     }
 
@@ -200,29 +194,23 @@ export class SingleRechargesComponent implements OnInit, OnDestroy, OnChanges {
         } else if (this.searchByDate) {
             this.singleDatasource.search({
                 userId: this.userId,
-                pageNumber: $event.pageIndex + 1,
-                pageSize: $event.pageSize,
-                searchRecipient: this.searchRecipient
-            });
+                recipient: this.searchRecipient
+            },  $event.pageIndex + 1,  $event.pageSize);
         } else if (this.searchByProduct) {
             this.singleDatasource.search({
                 userId: this.userId,
-                pageNumber: $event.pageIndex + 1,
-                pageSize: $event.pageSize,
-                searchProduct: this.searchProduct
-            });
+                product: this.searchProduct
+            }, $event.pageIndex + 1, $event.pageSize);
         } else if (this.searchByDate) {
             this.singleDatasource.search({
                 userId: this.userId,
-                pageNumber: $event.pageIndex + 1,
-                pageSize: $event.pageSize,
-                searchDate: this.utilityService.stringifyDate(this.rechargeDate)
-            });
+                startDate: this.utilityService.stringifyDate(this.rechargeDate)
+            }, $event.pageIndex + 1, $event.pageSize);
         }
     }
 
     private reloadPage() {
-        this.singleDatasource.loadRecharges(this.userId, this.singlePageIndex, this.singlePageSize)
+        this.singleDatasource.loadRecharges(this.userId, this.singlePageIndex, this.singlePageSize);
     }
 
     private configureModal(data: Partial<{id: string, recipient: string, type: string, bulkId: string}>): MatDialogConfig {

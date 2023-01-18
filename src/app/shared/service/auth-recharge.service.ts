@@ -101,7 +101,8 @@ export class AuthRechargeService {
         });
     }
 
-    public getBulkIndividualFailedRequests(id: string, pageNumber: number = 1, pageSize: number = 20): Observable<Page<IndividualRequests>> {
+    public getBulkIndividualFailedRequests(id: string,
+                                           pageNumber: number = 1, pageSize: number = 20): Observable<Page<IndividualRequests>> {
         return this.http.get<Page<IndividualRequests>>(BULK_AUTH_RECHARGE_URL + '/failed/' + id, {
             params: {
                 pageNumber: pageNumber,
@@ -110,7 +111,9 @@ export class AuthRechargeService {
         });
     }
 
-    public getBulkIndividualFailedUnresolvedRequests(id: string, pageNumber: number = 1, pageSize: number = 20): Observable<Page<IndividualRequests>> {
+    public getBulkIndividualFailedUnresolvedRequests(id: string,
+                                                     pageNumber: number = 1,
+                                                     pageSize: number = 20): Observable<Page<IndividualRequests>> {
         return this.http.get<Page<IndividualRequests>>(BULK_AUTH_RECHARGE_URL + '/failedunresolved/' + id, {
             params: {
                 pageNumber: pageNumber,
@@ -119,12 +122,21 @@ export class AuthRechargeService {
         });
     }
 
-    public searchSingleRecharge(single: Partial<SearchSingleRecharge>): Observable<Page<SingleRecharge>> {
-        return this.http.post<Page<SingleRecharge>>(SINGLE_AUTH_RECHARGE_URL + '/single/adminsearch', single);
+    public searchSingleRecharge(single: Partial<SearchSingleRecharge>,
+                                pageNumber: number,
+                                pageSize: number): Observable<Page<SingleRecharge>> {
+
+        return this.http.post<Page<SingleRecharge>>(SINGLE_AUTH_RECHARGE_URL + '/single/adminsearch', single, {
+            params: {
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+            }
+        });
     }
 
     public searchSingleFailedRecharge(single: Partial<SearchSingleFailedRecharge>,
-                                      pageNumber: number, pageSize: number): Observable<Page<SingleRecharge>> {
+                                      pageNumber: number,
+                                      pageSize: number): Observable<Page<SingleRecharge>> {
         return this.http.post<Page<SingleRecharge>>(SINGLE_AUTH_RECHARGE_URL + '/single/adminfailedsearch', single, {
             params: {
                 pageNumber: pageNumber,
@@ -246,6 +258,31 @@ export class AuthRechargeService {
 
     public downloadIndividualByBulkId(id: string): Observable<any> {
         return this.http.get(BULK_AUTH_RECHARGE_URL + '/download-user-individual/' + id, {
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    public downloadCombined(id: string, startDate: Date, endDate: Date): Observable<any> {
+        let month = startDate.getMonth()  + 1;
+        let startMonth: string = String(month);
+        let endMonth: string = null;
+
+        if (month < 10) { startMonth = '0' + startMonth; }
+
+        if (endDate != null) {
+            month = endDate.getMonth() + 1;
+            endMonth = String(month);
+
+            if (month < 10) { endMonth = '0' + endMonth; }
+        }
+
+        const body = {
+            id: id,
+            startDate: startDate.getFullYear() + '-' + startMonth + '-' + startDate.getDate() + ' 00:00:00',
+            endDate: endDate ? endDate.getFullYear() + '-' + endMonth + '-' + endDate.getDate() + ' 00:00:00' : null
+        };
+
+        return this.http.post(SINGLE_AUTH_RECHARGE_URL + '/combined/download', body, {
             responseType: 'blob' as 'json'
         });
     }

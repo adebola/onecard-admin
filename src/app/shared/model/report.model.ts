@@ -1,8 +1,16 @@
 export interface Report {
     id: number;
     reportNameName: string;
-    reportFile: string;
     reportDescription: string;
     createdBy: string;
     createdDate: Date;
+}
+
+export interface RechargeReportRequest {
+    userId: string;
+    serviceCode: string;
+    type: string;
+    status: string;
+    startDate: string;
+    endDate: string;
 }

@@ -158,6 +158,5 @@ export class BulkRechargesComponent implements OnInit, OnDestroy, OnChanges {
             const fileURL = URL.createObjectURL(blob);
             window.open(fileURL);
         });
-
     }
 }

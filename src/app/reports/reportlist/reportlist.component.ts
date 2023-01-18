@@ -6,6 +6,7 @@ import {ReportDatasource} from './report.datasource';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
 
+const RECHARGE_REPORT = 1;
 
 @Component({
     selector: 'app-report-list',
@@ -18,7 +19,7 @@ export class ReportListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public busy = false;
     public datasource: ReportDatasource;
-    public displayedColumns = ['id', 'name', 'file', 'run'];
+    public displayedColumns = ['id', 'name', 'run'];
 
     constructor( private router: Router,
                  private reportService: ReportService) {}
@@ -42,7 +43,20 @@ export class ReportListComponent implements OnInit, OnDestroy, AfterViewInit {
         this.datasource.loadReports();
     }
 
-    onRun(id) {
+    onRun(id: number) {
+        switch (id) {
+            case RECHARGE_REPORT: {
+                this.router.navigate(['/reports/recharge']);
+                break;
+            }
+            default: {
+                console.error('Invalid Route ', id);
+                break;
+            }
+        }
+    }
+
+    onRun_OLD(id) {
         this.busy = true;
 
         this.reportService.runReport(id).pipe(

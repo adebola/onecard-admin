@@ -64,7 +64,7 @@
                                     </div>
                                 </ng-container>
                                 <div class="col-sm-3">
-                                    <mat-checkbox formControlName="enabled" class="mt-3">Enabled</mat-checkbox>
+                                    <mat-checkbox formControlName="enabled" class="mt-3" (change)="onEnabledChange($event)">Enabled</mat-checkbox>
                                 </div>
                                 <div class="col-sm-3">
                                     <mat-checkbox formControlName="emailverified" class="mt-3" disabled>E-Mail

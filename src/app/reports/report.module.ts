@@ -5,6 +5,7 @@ import {MaterialModule} from '../app.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ReportListComponent} from './reportlist/reportlist.component';
 import {ReportRoutes} from './report.routing';
+import {RechargeReportComponent} from './recharge/recharge-report.component';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {ReportRoutes} from './report.routing';
         ReactiveFormsModule,
     ],
     declarations: [
-        ReportListComponent
+        ReportListComponent,
+        RechargeReportComponent
     ]
 })
 export class ReportModule {}

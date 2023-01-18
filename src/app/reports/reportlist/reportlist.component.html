@@ -20,7 +20,6 @@
                         <div class="table-responsive">
                             <mat-table matSort matSortDirection="asc" [dataSource]="datasource" *ngIf="!(datasource.loading$ | async); else loading">
 
-
                                 <ng-container matColumnDef="id">
                                     <mat-header-cell mat-header-cell *matHeaderCellDef >Id</mat-header-cell>
                                     <mat-cell *matCellDef="let report">{{report.id}}</mat-cell>
@@ -29,11 +28,6 @@
                                 <ng-container matColumnDef="name">
                                     <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
                                     <mat-cell *matCellDef="let report">{{report.reportName}}</mat-cell>
-                                </ng-container>
-
-                                <ng-container matColumnDef="file">
-                                    <mat-header-cell *matHeaderCellDef>File</mat-header-cell>
-                                    <mat-cell *matCellDef="let report">{{report.reportFile}}</mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="run">

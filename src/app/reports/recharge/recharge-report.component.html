@@ -1,0 +1,104 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">report</i>
+                        </div>
+                        <h4 class="card-title">Recharge Report</h4>
+                    </div>
+
+                    <form [formGroup]="rechargeForm" (ngSubmit)="onSubmit(rechargeForm)" class="form-horizontal">
+                        <div class="card-body">
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">User</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <mat-select placeholder="User" name="user" formControlName="user" id="user">
+                                            <mat-option
+                                                    *ngFor="let user of users$ | async"
+                                                    [value]="user.id">
+                                                {{ user.userName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <label class="col-sm-2 col-form-label">Service</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <mat-select placeholder="Service" name="service" formControlName="service" id="service">
+                                            <mat-option *ngFor="let service of services$ | async"
+                                                    [value]="service.serviceCode">
+                                                {{ service.serviceName }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <label class="col-sm-2 col-form-label">Type</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <mat-select placeholder="Type" name="type" formControlName="type" id="type">
+                                            <mat-option
+                                                    *ngFor="let type of types"
+                                                    [value]="type">
+                                                {{ type }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+                                <label class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <mat-select placeholder="Status" name="status" formControlName="status" id="status">
+                                            <mat-option *ngFor="let status of statuses"
+                                                        [value]="status">
+                                                {{ status }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-2"></div>
+                                <mat-form-field class="col-md-4">
+                                    <input matInput [matDatepicker]="bulkPicker" formControlName="start"
+                                           placeholder="Choose Start Date" (click)="bulkPicker.open()">
+                                    <mat-datepicker-toggle matSuffix [for]="bulkPicker"></mat-datepicker-toggle>
+                                    <mat-datepicker #bulkPicker></mat-datepicker>
+                                </mat-form-field>
+
+                                <div class="col-sm-2"></div>
+                                <mat-form-field class="col-md-4">
+                                    <input matInput [matDatepicker]="bulkPicker1" formControlName="end"
+                                           placeholder="Choose End Date" (click)="bulkPicker1.open()">
+                                    <mat-datepicker-toggle matSuffix [for]="bulkPicker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #bulkPicker1></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    <button  mat-raised-button class="btn btn-warning btn-fill">
+                                        Run Report
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

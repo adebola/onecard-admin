@@ -5,10 +5,10 @@ import {NotificationService} from '../../../shared/service/notification.service'
 import {MatSelectChange} from '@angular/material/select';
 import {Observable, throwError} from 'rxjs';
 import {RechargeProvider} from '../../../shared/model/recharge-provider.model';
-import {ProviderService} from '../../../shared/service/provider.service';
 import {catchError, map} from 'rxjs/operators';
 import {ProviderServiceModel} from '../../../shared/model/provider-services.model';
 import {Subscription} from 'rxjs/Subscription';
+import {ProviderService} from '../../../shared/service/provider.service';
 
 @Component({
     selector: 'app-recharge-provider-modal',

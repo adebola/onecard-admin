@@ -18,6 +18,13 @@
                             </ng-template>
                             <app-bulk-recharges-component [userId]="userId" [display]="display"></app-bulk-recharges-component>
                         </mat-tab>
+                        <mat-tab>
+                            <ng-template mat-tab-label>
+                                <mat-icon class="example-tab-icon">all_inclusive</mat-icon>
+                                All Recharges
+                            </ng-template>
+                            <app-combined-recharge-component [userId]="userId" [display]="display"></app-combined-recharge-component>
+                        </mat-tab>
                     </mat-tab-group>
                 </div>
             </div>
