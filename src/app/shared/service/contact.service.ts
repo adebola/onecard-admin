@@ -3,9 +3,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Page} from './utility/page';
-import {Audit} from '../model/audit.model';
 import {Contact} from '../model/contact.model';
-import {assertArrayOfStrings} from '@angular/compiler/src/assertions';
 
 
 const CONTACT_URL = environment.base_url + '/api/v1/contact';
