@@ -1,35 +1,28 @@
-# [OneCard Admin App](https://onecard-damin.web.app/)
+# [Onecard Admin](https://recharge.onecardnigeria.com/static/media/lightlogo.b9e05b35b3e5fb8e0fc37b6c54783b00.svg)
 
 ![version](https://img.shields.io/badge/version-2.6.0-blue.svg) [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/ct-material-dashboard-pro-angular.svg?maxAge=2592000)](https://github.com/creativetimofficial/ct-material-dashboard-pro-angular/issues?q=is%3Aopen+is%3Aissue) [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/ct-material-dashboard-pro-angular.svg?maxAge=2592000)](https://github.com/creativetimofficial/ct-material-dashboard-pro-angular/issues?q=is%3Aissue+is%3Aclosed)
 
-![Product Gif](https://media.giphy.com/media/fVelPn4iBLS9c3bvCt/giphy.gif)
 
-Onecard Administration Application s a Premium Material Bootstrap 4 Admin with a fresh, new design inspired by Google's Material Design. It is based on the popular Bootstrap 4 framework and comes packed with multiple third-party plugins. All components are built to fit perfectly with each other, while aligning to the material concepts.
+Onecard Administration Application 
 
-Onecard Admin makes use of light, surface and movement. The general layout resembles sheets of paper following multiple layers, so that the depth and order is obvious. Inside the archive you will find multiple example pages on how to use all components. And, of course, every element is documented.
-
-
-You can find the Github Repo here.
+Admin Application to manage the Onecard App
 
 #### Special thanks
 During the development of this application, we have used many existing resources from awesome developers. We want to thank them for providing their tools open source:
-- [Adebola Omoboya](https://github.com/mouse0270/bootstrap-notify) for the notification system.
-- [Ifemide Aibinuomo](https://gionkunz.github.io/chartist-js/) for the wonderful charts
+- [Adebola Omoboya](https://github.com/adebola) the developer.
 
+## Technologies
 
-Let us know your thoughts below. And good luck with development!
-
-## Versions
-
-[<img src="https://s3.amazonaws.com/creativetim_bucket/github/html.png" width="60" height="60" />](https://www.creative-tim.com/product/material-dashboard-pro)
-[<img src="https://s3.amazonaws.com/creativetim_bucket/github/react.svg" width="60" height="60" />](https://www.creative-tim.com/product/material-dashboard-pro-react)
-[<img src="https://s3.amazonaws.com/creativetim_bucket/github/vuejs.png" width="60" height="60" />](https://www.creative-tim.com/product/vue-material-dashboard-pro)
-[<img src="https://s3.amazonaws.com/creativetim_bucket/github/angular.png" width="60" height="60" />](https://www.creative-tim.com/product/material-dashboard-pro-angular2)
+<img src="https://s3.amazonaws.com/creativetim_bucket/github/html.png" width="60" height="60" />
+<img src="https://www.citypng.com/public/uploads/preview/js-javascript-round-logo-icon-png-11662226392lsrrajcm0y.png" width="60" height="60" />
+<img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png" width="60" height="60" />
+<img src="https://s3.amazonaws.com/creativetim_bucket/github/angular.png" width="60" height="60" />
+<img src="https://artifacthub.io/image/40aa4ba5-9e02-4e3d-a43e-5cde73176261@3x" width="60" height="60" />
 
 
 ## Browser Support
 
-At present, we officially aim to support the last two versions of the following browsers:
+At present, we officially support the last two versions of the following browsers:
 
 <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/chrome.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/firefox.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/edge.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/safari.png" width="64" height="64"> <img src="https://s3.amazonaws.com/creativetim_bucket/github/browser/opera.png" width="64" height="64">
 
@@ -40,8 +33,8 @@ If you have questions or need help integrating the product please [contact us](h
 
 ## Licensing
 
-- Copyright 2021 Factorial Systems! (https://www.factorialsystems.io)
-- Factorial Systems [license](https://www.factorialsystems.io)
+- Copyright 2021 Factorial Systems! (http://www.factorialsystems.io)
+- Factorial Systems [license](http://www.factorialsystems.io)
 
 
 ##### Social Media
@@ -55,3 +48,5 @@ Dribbble: <https://dribbble.com/factorialsystems>
 Google+: <https://plus.google.com/+FactorialSystems>
 
 Instagram: <https://instagram.com/factorialsystems>
+
+

@@ -1,10 +1,9 @@
 {
   "name": "onecard-admin",
   "version": "1.0.0",
-  "license": "https://demos.creative-tim.com/material-dashboard-pro-angular2/documentation/tutorial",
   "repository": {
     "type": "git",
-    "url": "https://github.com/creativetimofficial/ct-material-dashboard-pro-angular.git"
+    "url": "https://github.com/adebola/onecard-admin.git"
   },
   "scripts": {
     "ng": "ng",
@@ -75,7 +74,7 @@
     "zone.js": "0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "12.1.2",
+    "@angular-devkit/build-angular": "^12.2.18",
     "@angular/cli": "12.1.2",
     "@angular/compiler-cli": "12.1.2",
     "@types/bootstrap": "5.0.17",

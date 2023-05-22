@@ -20,22 +20,29 @@
                                 <label class="col-sm-2 col-form-label">User</label>
                                 <div class="col-sm-4">
                                     <mat-form-field class="example-full-width has-label">
-                                        <mat-select placeholder="User" name="user" formControlName="user" id="user">
-                                            <mat-option
-                                                    *ngFor="let user of users$ | async"
-                                                    [value]="user.id">
-                                                {{ user.userName }}
-                                            </mat-option>
-                                        </mat-select>
+                                        <input type="text" matInput class="form-control" #input>
                                     </mat-form-field>
+
+                                    <ng-container style="max-height: 50px;">
+                                        <mat-table matSort matSortDirection="asc" class="lessons-table mat-elevation-z8" [dataSource]="datasource">
+                                            <ng-container matColumnDef="username">
+                                                <mat-header-cell *matHeaderCellDef>User Name</mat-header-cell>
+                                                <mat-cell *matCellDef="let user">{{user.username}}</mat-cell>
+                                            </ng-container>
+
+                                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                                            <mat-row *matRowDef="let row; columns: displayedColumns" (click)="onRowClicked(row)"  [ngClass]="{'highlight': selectedRowIndex == row.id}"></mat-row>
+                                        </mat-table>
+                                    </ng-container>
                                 </div>
 
                                 <label class="col-sm-2 col-form-label">Service</label>
                                 <div class="col-sm-4">
                                     <mat-form-field class="example-full-width has-label">
-                                        <mat-select placeholder="Service" name="service" formControlName="service" id="service">
+                                        <mat-select placeholder="Service" name="service" formControlName="service"
+                                                    id="service">
                                             <mat-option *ngFor="let service of services$ | async"
-                                                    [value]="service.serviceCode">
+                                                        [value]="service.serviceCode">
                                                 {{ service.serviceName }}
                                             </mat-option>
                                         </mat-select>
@@ -60,7 +67,8 @@
                                 <label class="col-sm-2 col-form-label">Status</label>
                                 <div class="col-sm-4">
                                     <mat-form-field class="example-full-width has-label">
-                                        <mat-select placeholder="Status" name="status" formControlName="status" id="status">
+                                        <mat-select placeholder="Status" name="status" formControlName="status"
+                                                    id="status">
                                             <mat-option *ngFor="let status of statuses"
                                                         [value]="status">
                                                 {{ status }}
@@ -90,7 +98,7 @@
 
                             <div class="row">
                                 <div class="col-12 text-right">
-                                    <button  mat-raised-button class="btn btn-warning btn-fill">
+                                    <button mat-raised-button class="btn btn-warning btn-fill">
                                         Run Report
                                     </button>
                                 </div>

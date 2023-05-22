@@ -1,27 +1,36 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../shared/service/user.service';
-import {Observable} from 'rxjs';
-import {SimpleUser} from '../../shared/model/simple-user.model';
+import {fromEvent, Observable} from 'rxjs';
 import {ProviderService} from '../../shared/service/provider.service';
-import {finalize, map} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, finalize, map, tap} from 'rxjs/operators';
 import {ProviderServiceModel} from '../../shared/model/provider-services.model';
 import {ReportService} from '../../shared/service/report.service';
 import {Subscription} from 'rxjs/Subscription';
+import {UserDatasource} from '../../shared/datasource/user.datasource';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 
 @Component({
     selector: 'app-recharge-report',
-    templateUrl: './recharge-report.component.html',
+    templateUrl: './recharge-report.component.html'
 })
-export class RechargeReportComponent implements OnInit, OnDestroy {
+export class RechargeReportComponent implements OnInit, OnDestroy, AfterViewInit {
     busy = false;
     private build: FormBuilder;
     public rechargeForm: FormGroup;
-    public users$: Observable<SimpleUser[]>;
     public services$: Observable<ProviderServiceModel[]>;
     public types  = ['single', 'bulk'];
     public statuses = ['failed', 'success'];
     private subscription: Subscription = null;
+    private selectedId: string = null;
+
+    displayedColumns = ['username'];
+    public datasource: UserDatasource;
+    private eventSubscription: Subscription = null;
+
+    @ViewChild('input') input: ElementRef;
+    // @ViewChild(MatPaginator) paginator: MatPaginator;
+    selectedRowIndex: any;
 
     constructor(@Inject(FormBuilder) private fb: FormBuilder,
                 private userService: UserService,
@@ -29,18 +38,44 @@ export class RechargeReportComponent implements OnInit, OnDestroy {
                 private providerService: ProviderService) {}
 
     ngOnDestroy(): void {
-        if (this.subscription) { this.subscription.unsubscribe();}
+        if (this.subscription) { this.subscription.unsubscribe(); }
     }
 
     ngOnInit(): void {
-        this.users$ = this.userService.findUsersNonPaged();
+        // this.users$ = this.userService.findUsersNonPaged();
+        this.datasource = new UserDatasource(this.userService);
         this.services$ = this.providerService.getAllServices(1, 100)
             .pipe(map(m => m.list));
         this.createForm();
     }
 
+    ngAfterViewInit(): void {
+        if (this.eventSubscription) {
+            this.eventSubscription.unsubscribe();
+        }
+
+        this.eventSubscription = fromEvent(this.input.nativeElement, 'keyup')
+            .pipe(
+                debounceTime(200),
+                distinctUntilChanged(),
+                tap(() => {
+                    if (this.input.nativeElement.value && this.input.nativeElement.value.length > 0) {
+                        this.datasource.loadUsers(1, 20,
+                            {
+                                search: this.input.nativeElement.value,
+                                admin:  null,
+                                ordinary: null
+                            });
+                    } else {
+                        this.selectedId = null;
+                    }
+                })
+            ).subscribe();
+    }
+
+
     onSubmit(rechargeForm: FormGroup) {
-        const user: string = rechargeForm.value.user;
+        const user: string = this.selectedId;
         const service: string = rechargeForm.value.service;
         const type: string = rechargeForm.value.type;
         const status: string = rechargeForm.value.status;
@@ -98,5 +133,18 @@ export class RechargeReportComponent implements OnInit, OnDestroy {
             start: [null],
             end: [null]
         });
+    }
+
+    logEvent($event: PageEvent) {
+        this.datasource.loadUsers($event.pageIndex + 1, $event.pageSize, {
+            search: this.input.nativeElement.value,
+            admin: null,
+            ordinary: null
+        });
+    }
+
+    onRowClicked(row) {
+        this.input.nativeElement.value = row.username;
+        this.selectedId = row.id;
     }
 }
