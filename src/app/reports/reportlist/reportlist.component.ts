@@ -7,6 +7,7 @@ import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
 
 const RECHARGE_REPORT = 1;
+const WALLET_REPORT = 2;
 
 @Component({
     selector: 'app-report-list',
@@ -45,10 +46,16 @@ export class ReportListComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onRun(id: number) {
         switch (id) {
-            case RECHARGE_REPORT: {
-                this.router.navigate(['/reports/recharge']);
+            case RECHARGE_REPORT:
+                this.router.navigate(['/reports/recharge'])
+                    .then(r => {});
                 break;
-            }
+
+            case WALLET_REPORT:
+                this.router.navigate(['/reports/wallet'])
+                    .then(r => {});
+                break;
+
             default: {
                 console.error('Invalid Route ', id);
                 break;

@@ -6,6 +6,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ReportListComponent} from './reportlist/reportlist.component';
 import {ReportRoutes} from './report.routing';
 import {RechargeReportComponent} from './recharge/recharge-report.component';
+import {WalletReportComponent} from './wallet/wallet-report.component';
+import {UserWalletComponent} from './wallet/user/user-wallet.component';
+import {ProviderWalletComponent} from './wallet/provider/provider-wallet.component';
 
 @NgModule({
     imports: [
@@ -17,7 +20,10 @@ import {RechargeReportComponent} from './recharge/recharge-report.component';
     ],
     declarations: [
         ReportListComponent,
-        RechargeReportComponent
+        RechargeReportComponent,
+        WalletReportComponent,
+        UserWalletComponent,
+        ProviderWalletComponent
     ]
 })
 export class ReportModule {}

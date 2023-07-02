@@ -3,7 +3,7 @@ import {environment} from '../../../environments/environment';
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {RechargeReportRequest, Report} from '../model/report.model';
+import {RechargeReportRequest, Report, WalletRechargeReport} from '../model/report.model';
 
 const REPORT_URL = environment.base_url + '/api/v1/reports';
 
@@ -42,6 +42,12 @@ export class ReportService {
 
     public runRechargeReport(request: Partial<RechargeReportRequest>): Observable<any> {
         return this.http.post(REPORT_URL + '/recharge', request, {
+            responseType: 'blob' as 'json'
+        });
+    }
+
+    public runWalletReport(request: Partial<WalletRechargeReport>): Observable<any> {
+        return this.http.post(REPORT_URL + '/wallet', request, {
             responseType: 'blob' as 'json'
         });
     }

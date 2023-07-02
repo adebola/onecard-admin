@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {UserService} from '../../shared/service/user.service';
 import {fromEvent, Observable} from 'rxjs';
 import {ProviderService} from '../../shared/service/provider.service';
@@ -8,7 +8,7 @@ import {ProviderServiceModel} from '../../shared/model/provider-services.model';
 import {ReportService} from '../../shared/service/report.service';
 import {Subscription} from 'rxjs/Subscription';
 import {UserDatasource} from '../../shared/datasource/user.datasource';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {PageEvent} from '@angular/material/paginator';
 
 @Component({
     selector: 'app-recharge-report',
@@ -16,7 +16,6 @@ import {MatPaginator, PageEvent} from '@angular/material/paginator';
 })
 export class RechargeReportComponent implements OnInit, OnDestroy, AfterViewInit {
     busy = false;
-    private build: FormBuilder;
     public rechargeForm: FormGroup;
     public services$: Observable<ProviderServiceModel[]>;
     public types  = ['single', 'bulk'];
@@ -29,8 +28,7 @@ export class RechargeReportComponent implements OnInit, OnDestroy, AfterViewInit
     private eventSubscription: Subscription = null;
 
     @ViewChild('input') input: ElementRef;
-    // @ViewChild(MatPaginator) paginator: MatPaginator;
-    selectedRowIndex: any;
+    selectedRowIndex: number;
 
     constructor(@Inject(FormBuilder) private fb: FormBuilder,
                 private userService: UserService,
@@ -42,7 +40,6 @@ export class RechargeReportComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     ngOnInit(): void {
-        // this.users$ = this.userService.findUsersNonPaged();
         this.datasource = new UserDatasource(this.userService);
         this.services$ = this.providerService.getAllServices(1, 100)
             .pipe(map(m => m.list));
@@ -108,7 +105,7 @@ export class RechargeReportComponent implements OnInit, OnDestroy, AfterViewInit
         this.busy = true;
 
         this.subscription = this.reportService.runRechargeReport({
-            userId: user,
+            userId: (this.input.nativeElement.value === null || this.input.nativeElement.value === '') ? null : user,
             serviceCode: service,
             type: type,
             status: status,

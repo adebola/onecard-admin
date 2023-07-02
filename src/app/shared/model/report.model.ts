@@ -14,3 +14,10 @@ export interface RechargeReportRequest {
     startDate: string;
     endDate: string;
 }
+
+export interface WalletRechargeReport {
+    id: string;
+    type: string;
+    startDate: string;
+    endDate: string;
+}

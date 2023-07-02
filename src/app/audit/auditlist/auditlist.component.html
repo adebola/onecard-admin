@@ -1,4 +1,7 @@
 <div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -11,15 +14,16 @@
                     </div>
                     <div class="card-body">
                         <mat-form-field style="max-width: 300px;">
-                            <input  matInput placeholder="Search Audit Actions" #input>
+                            <input matInput placeholder="Search Audit Actions" #input>
                         </mat-form-field>
 
                         <div class="table-responsive">
-                            <mat-table matSort matSortDirection="asc" [dataSource]="datasource" *ngIf="!(datasource.loading$ | async); else loading">
+                            <mat-table matSort matSortDirection="asc" [dataSource]="datasource"
+                                       *ngIf="!(datasource.loading$ | async); else loading">
 
 
                                 <ng-container matColumnDef="user">
-                                    <mat-header-cell mat-header-cell *matHeaderCellDef >User</mat-header-cell>
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef>User</mat-header-cell>
                                     <mat-cell *matCellDef="let audit">{{audit.userName}}</mat-cell>
                                 </ng-container>
 
@@ -36,7 +40,8 @@
                                 <ng-container matColumnDef="view">
                                     <mat-header-cell *matHeaderCellDef>View</mat-header-cell>
                                     <mat-cell mat-cell *matCellDef="let audit" class="td-actions text-right">
-                                        <i class="material-icons" style="color: #4CAF50; cursor: pointer;" (click)="onView(audit.id)">slideshow</i>
+                                        <i class="material-icons" style="color: #4CAF50; cursor: pointer;"
+                                           (click)="onView(audit.id)">slideshow</i>
                                     </mat-cell>
                                 </ng-container>
 
@@ -55,6 +60,26 @@
                             <ng-template #loading>
                                 Loading Please Wait...
                             </ng-template>
+                        </div>
+
+                        <div class="row pull-left">
+                            <div class="col-md-4">
+                                <button class="btn btn-warning btn-lg" (click)="onDownload()">Download</button>
+                            </div>
+                            <div class="col-md-4">
+                                <input matInput [matDatepicker]="picker1" placeholder="Choose Start Date"
+                                       (dateChange)="valueStartChange($event)"
+                                       (click)="picker1.open()"/>
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </div>
+                            <div class="col-md-4">
+                                <input matInput [matDatepicker]="picker2" placeholder="Choose End Date"
+                                       (dateChange)="valueEndChange($event)"
+                                       (click)="picker2.open()"/>
+                                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                <mat-datepicker #picker2></mat-datepicker>
+                            </div>
                         </div>
                     </div>
                 </div>

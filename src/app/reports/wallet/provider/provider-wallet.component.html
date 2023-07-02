@@ -1,0 +1,55 @@
+<div class="mx-0 px-0">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="providerForm" (ngSubmit)="onSubmit(providerForm)" class="form-horizontal">
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Provider</label>
+                <div class="col-sm-4">
+                    <mat-form-field class="example-full-width has-label">
+                        <label class="col-sm-2 col-form-label">Service</label>
+                        <div class="col-sm-4">
+                            <mat-form-field class="example-full-width has-label">
+                                <mat-select placeholder="Service" name="service" formControlName="service"
+                                            id="service">
+                                    <mat-option *ngFor="let service of services$ | async"
+                                                [value]="service.id">
+                                        {{ service.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </mat-form-field>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-2"></div>
+                <mat-form-field class="col-md-4">
+                    <input matInput [matDatepicker]="bulkPicker" formControlName="start"
+                           placeholder="Choose Start Date" (click)="bulkPicker.open()">
+                    <mat-datepicker-toggle matSuffix [for]="bulkPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #bulkPicker></mat-datepicker>
+                </mat-form-field>
+
+                <div class="col-sm-2"></div>
+                <mat-form-field class="col-md-4">
+                    <input matInput [matDatepicker]="bulkPicker1" formControlName="end"
+                           placeholder="Choose End Date" (click)="bulkPicker1.open()">
+                    <mat-datepicker-toggle matSuffix [for]="bulkPicker1"></mat-datepicker-toggle>
+                    <mat-datepicker #bulkPicker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <div class="col-12 text-right">
+                    <button mat-raised-button class="btn btn-warning btn-fill">
+                        Run Report
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

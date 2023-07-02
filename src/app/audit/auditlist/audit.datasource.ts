@@ -66,7 +66,6 @@ export class AuditDatasource implements DataSource<Audit> {
             catchError(() => of(null)),
             finalize(() => this.loadingSubject.next(false))
         ).subscribe(page => {
-            console.log('PAGE', page);
             this.totalSize = page.totalSize;
             this.pages = page.pages;
             this.pageSize = page.pageSize;

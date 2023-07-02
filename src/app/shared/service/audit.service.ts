@@ -6,6 +6,7 @@ import {Page} from './utility/page';
 import {Audit} from '../model/audit.model';
 
 const AUDIT_URL = environment.base_url + '/api/v1/audit';
+const REPORT_URL = environment.base_url + '/api/v1/reports';
 
 @Injectable({ providedIn: 'root' })
 export class AuditService {
@@ -22,5 +23,21 @@ export class AuditService {
 
     public findById(id: string): Observable<Audit> {
         return this.http.get<Audit>(AUDIT_URL + '/' + id);
+    }
+
+    public runAuditReport(startDate: Date, endDate: Date): Observable<any> {
+        const body = {
+            start: startDate ? startDate.getFullYear() + '-' + ('0' + (startDate.getMonth() + 1 )).slice(-2) + '-' +
+                ('0' + startDate.getDate()).slice(-2) + ' ' + ('0' + startDate.getHours()).slice(-2) + ':' +
+                ('0' + startDate.getMinutes()).slice(-2) + ':' + ('0' + startDate.getSeconds()).slice(-2) : null,
+
+            end: endDate ? endDate.getFullYear() + '-' + ('0' + (endDate.getMonth() + 1 )).slice(-2) + '-' +
+                ('0' + endDate.getDate()).slice(-2) + ' ' + ('0' + endDate.getHours()).slice(-2) + ':' +
+                ('0' + endDate.getMinutes()).slice(-2) + ':' + ('0' + endDate.getSeconds()).slice(-2) : null
+        };
+
+        return this.http.post(REPORT_URL + '/audit', body, {
+            responseType: 'blob' as 'json'
+        });
     }
 }

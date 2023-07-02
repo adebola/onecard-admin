@@ -10,7 +10,6 @@ export class UtilityService {
         let monthString: string;
         let dayString: string;
 
-
         if (month < 10) {
             monthString = '0' + month;
         } else {
@@ -24,5 +23,14 @@ export class UtilityService {
         }
 
         return year + '-' + monthString + '-' + dayString + ' 00:00:00';
+    }
+
+    public stringifyDateForJson(date: Date) {
+            let startMonth: string;
+            const m = date.getMonth() + 1;
+            startMonth = String(m);
+            if (m < 10) { startMonth = '0' + startMonth; }
+
+            return date.getFullYear() + '-' + startMonth + '-' + date.getDate() + ' 00:00:00';
     }
 }

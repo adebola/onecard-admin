@@ -37,10 +37,14 @@ export class RechargeProviderModalComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.rechargeProvider$ = this.providerService.getAllRechargeProviders(1, 1000)
-            .pipe(map(r => r.list));
+            .pipe(
+                map(r => r.list)
+            );
 
         this.serviceProvider$ = this.providerService.getAllServices(1, 1000)
-            .pipe(map(r => r.list));
+            .pipe(
+                map(r => r.list)
+            );
 
         this.createForm();
     }
