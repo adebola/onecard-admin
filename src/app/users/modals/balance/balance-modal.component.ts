@@ -15,17 +15,17 @@ import {MatButton} from '@angular/material/button';
 })
 export class BalanceModalComponent implements  OnInit, OnDestroy {
     public busy = false;
-    public selectedType = 1;
     public balanceForm: FormGroup;
+    @ViewChild('input') input: ElementRef<HTMLInputElement>;
     private accountSubscription: Subscription;
     @ViewChild('submit') submitButton: MatButton;
     public typeOptions = [{id: 1, description: 'Top-up Balance'}, {id: 2, description: 'Adjust Balance'}];
 
     constructor(private fb: FormBuilder,
                 private accountService: AccountService,
-                @Inject(MAT_DIALOG_DATA) public data: {id: string, bulkId: string, type: string},
                 private notificationService: NotificationService,
-                public dialogRef: MatDialogRef<BalanceModalComponent>) { }
+                public dialogRef: MatDialogRef<BalanceModalComponent>,
+                @Inject(MAT_DIALOG_DATA) public data: {id: string, bulkId: string, type: string}) { }
 
     ngOnDestroy(): void {}
 
@@ -42,12 +42,13 @@ export class BalanceModalComponent implements  OnInit, OnDestroy {
             return this.notificationService.info('You have not made any changes to this form, consequently it has not been saved');
         }
 
+        const type = form.value.type;
         const narrative = form.value.narrative;
         const balance = form.value.balance;
 
         let obs$: Observable<any>;
 
-        if (this.selectedType === 1) {
+        if (type === 1) {
             obs$ = this.accountService.updateBalance(this.data.id, balance, narrative);
         } else {
             obs$ = this.accountService.adjustBalance(this.data.id, balance, narrative);
@@ -83,6 +84,7 @@ export class BalanceModalComponent implements  OnInit, OnDestroy {
 
     private createForm() {
         this.balanceForm = this.fb.group({
+            type: [1, Validators.required],
             balance: [null, Validators.required],
             narrative: [null, Validators.required]
         });
@@ -103,5 +105,14 @@ export class BalanceModalComponent implements  OnInit, OnDestroy {
     private unBusyForm() {
         this.busy = false;
         this.submitButton.disabled = false;
+    }
+
+    public onChange($event) {
+        console.log('target', $event.target.value);
+        if ($event.target.value === 1) {
+            this.input.nativeElement.placeholder = 'Add to Balance';
+        } else {
+            this.input.nativeElement.placeholder = 'New Value of Balance';
+        }
     }
 }

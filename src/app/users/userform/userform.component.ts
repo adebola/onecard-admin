@@ -104,14 +104,15 @@ export class UserFormComponent implements OnInit, OnDestroy {
             });
         }
 
+
+
         this.subscription = this.userService.findUserById(this.id).pipe(
             catchError(err => {
                 return throwError(err);
             })
         ).subscribe(user => {
             if (user == null) {
-                // tslint:disable-next-line:max-line-length
-                this.notificationService.error('Error Loading User : ' + this.id + '. It might not exist, please contact Technical Support');
+                this.notificationService.error('Error Loading User : ' + this.id + '. may not exist, please contact Technical Support');
                 return this.router.navigate(['/users/user']);
             }
 
@@ -257,7 +258,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
     }
 
     onEnabledChange($event: MatCheckboxChange) {
-        console.log('Checked', $event.checked);
         if (this.activateSubscription) { this.activateSubscription.unsubscribe(); }
         this.activateSubscription = this.userService.toggleUserActivation(this.id).subscribe();
     }

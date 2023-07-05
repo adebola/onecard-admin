@@ -7,7 +7,6 @@ import {Account, Transaction} from '../model/account.model';
 import {WalletFund} from '../model/wallet-fund.model';
 import {NewBalanceModel} from '../model/new-balance.model';
 import {AdjustResponse} from '../model/adjust.model';
-import {exhaustMap} from 'rxjs/operators';
 
 const ACCOUNT_URL = environment.base_url + '/api/v1/account';
 const TRANSACTION_URL = environment.base_url + '/api/v1/transaction';

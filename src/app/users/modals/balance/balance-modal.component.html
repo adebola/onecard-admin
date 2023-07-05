@@ -9,12 +9,14 @@
                 <label class="col-md-2 col-form-label">Type</label>
                 <div class="col-md-4" style="max-width: 150px;">
                     <mat-form-field>
-                        <mat-select [(value)]="selectedType">
-                            <mat-option *ngFor="let type of typeOptions"
-                                        [value]="type.id">
+<!--                        Mat-Select / Mat-Option does not work well in a Mat-Dialog it freezes hence we use select and Option with-->
+<!--                        the matNativeControl option-->
+                        <select value="selectedType" formControlName="type" id = "type" (change)="onChange($event)" matNativeControl >
+                            <option *ngFor="let type of typeOptions" [value]="type.id">
                                 {{type.description}}
-                            </mat-option>
-                        </mat-select>
+                            </option>
+
+                        </select>
                     </mat-form-field>
                 </div>
             </div>
@@ -23,8 +25,7 @@
                 <label class="col-sm-2 col-form-label">Balance</label>
                 <div class="col-md-10">
                     <mat-form-field>
-                        <input matInput formControlName="balance" placeholder="Add to Balance" type="number" value=0
-                               required>
+                        <input matInput formControlName="balance" placeholder="Add to Balance" type="number" value=0 required #input>
                     </mat-form-field>
                 </div>
             </div>
