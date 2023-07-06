@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../shared/service/user.service';
 import {Subscription} from 'rxjs/Subscription';
 import {fromEvent} from 'rxjs';
-import {debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
 import {UserDatasource} from '../../shared/datasource/user.datasource';
 
 @Component({
@@ -15,12 +15,14 @@ import {UserDatasource} from '../../shared/datasource/user.datasource';
 export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild('input') input: ElementRef;
+    public busy = false;
     public datasource: UserDatasource;
     public displayedColumns = ['username', 'email', 'firstname', 'lastname', 'actions'];
     private id: string = null;
     private admin = false;
 
     private eventSubscription: Subscription = null;
+    private subscription: Subscription = null;
 
     constructor( private router: Router,
                  private route: ActivatedRoute,
@@ -86,5 +88,20 @@ export class UserListComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.datasource.loadOrdinaryUsers(1, 20);
         }
+    }
+
+    onDownload() {
+        this.busy = true;
+        if (this.subscription) { this.subscription.unsubscribe(); }
+
+        this.subscription = this.userService.runUserReport().pipe(
+            finalize(() => this.busy = false)
+        ).subscribe(data => {
+            const blob =
+                new Blob([data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+            const fileURL = URL.createObjectURL(blob);
+            this.busy = false;
+            window.open(fileURL);
+        });
     }
 }

@@ -20,7 +20,7 @@ export class AuditlistComponent implements OnInit, OnDestroy, AfterViewInit {
     public displayedColumns = ['user', 'action', 'date', 'view'];
     public startDate: Date = null;
     public endDate: Date = null;
-    public subscription: Subscription = null;
+    private subscription: Subscription = null;
     public busy = false;
 
     constructor( private router: Router,

@@ -12,6 +12,7 @@ import {SimpleUser} from '../model/simple-user.model';
 const USER_URL = environment.base_url + '/api/v1/user';
 const ROLE_URL = environment.base_url + '/api/v1/role';
 const ORGANIZATION_URL = environment.base_url + '/api/v1/organization';
+const REPORT_URL = environment.base_url + '/api/v1/reports';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -167,6 +168,12 @@ export class UserService {
     public removeUserFromOrganization(userId: string, organizationIds: string[]): Observable<any> {
         return this.http.post(ORGANIZATION_URL + '/removeuser/' + userId, {
             users: organizationIds
+        });
+    }
+
+    public runUserReport(): Observable<any> {
+        return this.http.get(REPORT_URL + '/users', {
+            responseType: 'blob' as 'json'
         });
     }
 }

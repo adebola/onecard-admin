@@ -1,4 +1,7 @@
 <div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -63,6 +66,12 @@
                                 Loading Please Wait...
                             </ng-template>
                         </div>
+                        <div class="row pull-left">
+                            <div class="col-md-4">
+                                <button class="btn btn-warning btn-lg" (click)="onDownload()">Download</button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
