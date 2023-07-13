@@ -8,10 +8,10 @@
                 <label class="col-sm-2 col-form-label">User</label>
                 <div class="col-sm-4">
                     <mat-form-field class="example-full-width has-label">
-                        <input type="text" matInput class="form-control" #input>
+                        <input type="text" matInput class="form-control" formControlName="user" #input>
                     </mat-form-field>
 
-                    <ng-container style="max-height: 50px;">
+                    <ng-container style="max-height: 50px;" *ngIf="displayDropDown">
                         <mat-table matSort matSortDirection="asc" class="lessons-table mat-elevation-z8"
                                    [dataSource]="datasource">
                             <ng-container matColumnDef="username">
@@ -30,7 +30,7 @@
             <div class="row">
                 <div class="col-sm-2"></div>
                 <mat-form-field class="col-md-4">
-                    <input matInput [matDatepicker]="bulkPicker" formControlName="start"
+                    <input matInput [matDatepicker]="bulkPicker" formControlName="startDate"
                            placeholder="Choose Start Date" (click)="bulkPicker.open()">
                     <mat-datepicker-toggle matSuffix [for]="bulkPicker"></mat-datepicker-toggle>
                     <mat-datepicker #bulkPicker></mat-datepicker>
@@ -38,7 +38,7 @@
 
                 <div class="col-sm-2"></div>
                 <mat-form-field class="col-md-4">
-                    <input matInput [matDatepicker]="bulkPicker1" formControlName="end"
+                    <input matInput [matDatepicker]="bulkPicker1" formControlName="endDate"
                            placeholder="Choose End Date" (click)="bulkPicker1.open()">
                     <mat-datepicker-toggle matSuffix [for]="bulkPicker1"></mat-datepicker-toggle>
                     <mat-datepicker #bulkPicker1></mat-datepicker>

@@ -24,6 +24,7 @@ export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
     private subscription: Subscription = null;
     public displayedColumns = ['username'];
     private eventSubscription: Subscription = null;
+    public displayDropDown = false;
 
     constructor(@Inject(FormBuilder) private fb: FormBuilder,
                 private userService: UserService,
@@ -50,6 +51,7 @@ export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
                 distinctUntilChanged(),
                 tap(() => {
                     if (this.input.nativeElement.value && this.input.nativeElement.value.length > 0) {
+                        this.displayDropDown = true;
                         this.datasource.loadUsers(1, 20,
                             {
                                 search: this.input.nativeElement.value,
@@ -58,6 +60,7 @@ export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
                             });
                     } else {
                         this.selectedId = null;
+                        this.displayDropDown = false;
                     }
                 })
             ).subscribe();
@@ -69,8 +72,9 @@ export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onSubmit(walletForm: FormGroup) {
-        const end: Date = walletForm.value.end;
-        const start: Date = walletForm.value.start;
+        const user: string = this.selectedId;
+        const end: Date = walletForm.value.endDate;
+        const start: Date = walletForm.value.startDate;
 
         let startDate: string;
         let endDate: string;
@@ -83,8 +87,10 @@ export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
             endDate = this.utilityService.stringifyDateForJson(end);
         }
 
+        this.busy = true;
+
         this.subscription = this.reportService.runWalletReport({
-            id: (this.input.nativeElement.value === null || this.input.nativeElement.value === '') ? null : this.selectedId,
+            id: (this.input.nativeElement.value === null || this.input.nativeElement.value === '') ? null : user,
             type: 'user',
             startDate: startDate ? startDate : null,
             endDate: endDate ? endDate : null

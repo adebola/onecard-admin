@@ -22,6 +22,7 @@ export class RechargeReportComponent implements OnInit, OnDestroy, AfterViewInit
     public statuses = ['failed', 'success'];
     private subscription: Subscription = null;
     private selectedId: string = null;
+    public displayDropdown = false;
 
     displayedColumns = ['username'];
     public datasource: UserDatasource;
@@ -57,6 +58,7 @@ export class RechargeReportComponent implements OnInit, OnDestroy, AfterViewInit
                 distinctUntilChanged(),
                 tap(() => {
                     if (this.input.nativeElement.value && this.input.nativeElement.value.length > 0) {
+                        this.displayDropdown = true;
                         this.datasource.loadUsers(1, 20,
                             {
                                 search: this.input.nativeElement.value,
@@ -65,6 +67,7 @@ export class RechargeReportComponent implements OnInit, OnDestroy, AfterViewInit
                             });
                     } else {
                         this.selectedId = null;
+                        this.displayDropdown = false;
                     }
                 })
             ).subscribe();

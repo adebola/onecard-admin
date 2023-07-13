@@ -23,7 +23,7 @@
                                         <input type="text" matInput class="form-control" #input>
                                     </mat-form-field>
 
-                                    <ng-container style="max-height: 50px;">
+                                    <ng-container style="max-height: 50px;" *ngIf="displayDropdown">
                                         <mat-table matSort matSortDirection="asc" class="lessons-table mat-elevation-z8" [dataSource]="datasource">
                                             <ng-container matColumnDef="username">
                                                 <mat-header-cell *matHeaderCellDef>User Name</mat-header-cell>
