@@ -51,4 +51,10 @@ export class ReportService {
             responseType: 'blob' as 'json'
         });
     }
+
+    public runProviderBalanceReport(): Observable<any> {
+        return this.http.get(REPORT_URL + '/provider-balances', {
+            responseType: 'blob' as 'json'
+        });
+    }
 }

@@ -5,9 +5,12 @@ import {ReportService} from '../../shared/service/report.service';
 import {ReportDatasource} from './report.datasource';
 import {fromEvent} from 'rxjs';
 import {debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
 
 const RECHARGE_REPORT = 1;
 const WALLET_REPORT = 2;
+const PROVIDER_BALANCE_REPORT = 3;
+const TRANSACTION_REPORT = 4;
 
 @Component({
     selector: 'app-report-list',
@@ -21,6 +24,7 @@ export class ReportListComponent implements OnInit, OnDestroy, AfterViewInit {
     public busy = false;
     public datasource: ReportDatasource;
     public displayedColumns = ['id', 'name', 'run'];
+    private subscription: Subscription = null;
 
     constructor( private router: Router,
                  private reportService: ReportService) {}
@@ -54,6 +58,23 @@ export class ReportListComponent implements OnInit, OnDestroy, AfterViewInit {
             case WALLET_REPORT:
                 this.router.navigate(['/reports/wallet'])
                     .then(r => {});
+                break;
+
+            case PROVIDER_BALANCE_REPORT:
+                if (this.subscription) { this.subscription.unsubscribe(); }
+                this.subscription = this.reportService.runProviderBalanceReport().pipe(
+                    finalize(() => this.busy = false)
+                ).subscribe(data => {
+                    const blob =
+                        new Blob([data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                    const fileURL = URL.createObjectURL(blob);
+                    this.busy = false;
+                    window.open(fileURL);
+                });
+                break;
+
+            case TRANSACTION_REPORT:
+                console.log('Not Yet Implemented');
                 break;
 
             default: {
