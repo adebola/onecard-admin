@@ -3,26 +3,16 @@
         <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
     </div>
     <div class="card-body">
-        <form [formGroup]="providerForm" (ngSubmit)="onSubmit(providerForm)" class="form-horizontal">
+        <form [formGroup]="providerWalletForm" (ngSubmit)="onSubmit(providerWalletForm)" class="form-horizontal">
             <div class="row">
-                <label class="col-sm-2 col-form-label">Provider</label>
-                <div class="col-sm-4">
-                    <mat-form-field class="example-full-width has-label">
-                        <label class="col-sm-2 col-form-label">Service</label>
-                        <div class="col-sm-4">
-                            <mat-form-field class="example-full-width has-label">
-                                <mat-select placeholder="Service" name="service" formControlName="service"
-                                            id="service">
-                                    <mat-option *ngFor="let service of services$ | async"
-                                                [value]="service.id">
-                                        {{ service.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </mat-form-field>
-
-                </div>
+                <label class="col-sm-2 col-form-label">Report Type</label>
+                <mat-form-field class="example-full-width has-label col-sm-4">
+                    <mat-select placeholder="Type" name="type" formControlName="type" id="service">
+                        <mat-option *ngFor="let type of reportType" [value]="type">
+                            {{ type }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </div>
 
             <div class="row">
