@@ -74,7 +74,8 @@ export class ReportListComponent implements OnInit, OnDestroy, AfterViewInit {
                 break;
 
             case TRANSACTION_REPORT:
-                console.log('Not Yet Implemented');
+                this.router.navigate(['/reports/transaction'])
+                    .then(r => {});
                 break;
 
             default: {

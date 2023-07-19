@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UserDatasource} from '../../../shared/datasource/user.datasource';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {UserService} from '../../../shared/service/user.service';
-import {fromEvent} from 'rxjs';
+import {fromEvent, Observable} from 'rxjs';
 import {debounceTime, distinctUntilChanged, finalize, tap} from 'rxjs/operators';
 import {Subscription} from 'rxjs/Subscription';
 import {UtilityService} from '../../../shared/service/utility.service';
@@ -15,6 +15,7 @@ import {ReportService} from '../../../shared/service/report.service';
 })
 export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('input') input: ElementRef;
+    @Input() mode: string;
 
     public busy: boolean;
     public walletForm: FormGroup;
@@ -25,6 +26,7 @@ export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
     public displayedColumns = ['username'];
     private eventSubscription: Subscription = null;
     public displayDropDown = false;
+    public transactionMode = false;
 
     constructor(@Inject(FormBuilder) private fb: FormBuilder,
                 private userService: UserService,
@@ -36,6 +38,10 @@ export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit(): void {
+        if (this.mode === 'transaction') {
+            this.transactionMode = true;
+        }
+
         this.datasource = new UserDatasource(this.userService);
         this.createForm();
     }
@@ -72,7 +78,7 @@ export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onSubmit(walletForm: FormGroup) {
-        const user: string = this.selectedId;
+        const user: string = (this.input.nativeElement.value === null || this.input.nativeElement.value === '') ? null : this.selectedId;
         const end: Date = walletForm.value.endDate;
         const start: Date = walletForm.value.startDate;
 
@@ -89,12 +95,25 @@ export class UserWalletComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.busy = true;
 
-        this.subscription = this.reportService.runWalletReport({
-            id: (this.input.nativeElement.value === null || this.input.nativeElement.value === '') ? null : user,
-            type: 'user',
-            startDate: startDate ? startDate : null,
-            endDate: endDate ? endDate : null
-        }).pipe(
+        let ob$: Observable<any>;
+
+        if (this.mode === 'wallet') {
+            ob$ = this.reportService.runWalletReport({
+                id: user,
+                type: 'user',
+                startDate: startDate ? startDate : null,
+                endDate: endDate ? endDate : null
+            });
+        } else {
+            console.log('USER', user);
+            ob$ = this.reportService.runTransactionReport({
+                userId: user,
+                startDate: startDate ? startDate : null,
+                endDate: endDate ? endDate : null
+            });
+        }
+
+        this.subscription = ob$.pipe(
             finalize(() => this.busy = false)
         ).subscribe(data => {
             const blob =

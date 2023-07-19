@@ -9,6 +9,7 @@ import {RechargeReportComponent} from './recharge/recharge-report.component';
 import {WalletReportComponent} from './wallet/wallet-report.component';
 import {UserWalletComponent} from './wallet/user/user-wallet.component';
 import {ProviderWalletComponent} from './wallet/provider/provider-wallet.component';
+import {TransactionReportComponent} from './transaction/transaction-report.component';
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import {ProviderWalletComponent} from './wallet/provider/provider-wallet.compone
         RechargeReportComponent,
         WalletReportComponent,
         UserWalletComponent,
-        ProviderWalletComponent
+        ProviderWalletComponent,
+        TransactionReportComponent
     ]
 })
 export class ReportModule {}

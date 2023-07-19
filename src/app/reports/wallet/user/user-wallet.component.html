@@ -4,6 +4,7 @@
     </div>
     <div class="card-body">
         <form [formGroup]="walletForm" (ngSubmit)="onSubmit(walletForm)" class="form-horizontal">
+            <h3 *ngIf="transactionMode"> Transaction Report </h3>
             <div class="row">
                 <label class="col-sm-2 col-form-label">User</label>
                 <div class="col-sm-4">

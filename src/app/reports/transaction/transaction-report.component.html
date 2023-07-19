@@ -1,0 +1,15 @@
+<div class="main-content">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+    <div class="container-fluid mt-2">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <app-user-wallet [mode]="'transaction'"></app-user-wallet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -21,3 +21,9 @@ export interface WalletRechargeReport {
     startDate: string;
     endDate: string;
 }
+
+export interface TransactionReportRequest {
+    userId: string;
+    startDate: string;
+    endDate: string;
+}
