@@ -61,6 +61,7 @@ export class ReportListComponent implements OnInit, OnDestroy, AfterViewInit {
                 break;
 
             case PROVIDER_BALANCE_REPORT:
+                this.busy = true;
                 if (this.subscription) { this.subscription.unsubscribe(); }
                 this.subscription = this.reportService.runProviderBalanceReport().pipe(
                     finalize(() => this.busy = false)
