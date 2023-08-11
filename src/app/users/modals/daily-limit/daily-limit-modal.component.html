@@ -1,0 +1,47 @@
+<div class="card">
+    <div class="loading" *ngIf="busy">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+    <form [formGroup]="limitForm" (ngSubmit)="onSubmit(limitForm)" class="form-horizontal">
+        <div class="card-body">
+
+
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Limit</label>
+                <div class="col-md-10">
+                    <mat-form-field>
+                        <input matInput formControlName="limit" placeholder="New Daily Limit" type="number" value=0 required #input>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Narrative</label>
+                <div class="col-sm-10">
+                    <mat-form-field class="example-full-width has-label">
+                        <textarea matInput formControlName="narrative" required></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <div class="card-footer text-center">
+                        <button mat-raised-button type="submit" class="btn btn-outline-warning btn-fill text-sm-right" #submit>
+                            OK
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="card-footer text-center">
+                        <button mat-raised-button class="btn btn-outline-warning btn-fill text-sm-right" type="button"
+                                (click)="onCancel()">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

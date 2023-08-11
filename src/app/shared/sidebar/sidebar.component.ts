@@ -10,23 +10,23 @@ export interface RouteInfo {
     icontype: string;
     collapse?: string;
     children?: ChildrenItems[];
+    roles?: string[];
 }
 
 export interface ChildrenItems {
+    ab: string;
     path: string;
     title: string;
-    ab: string;
     type?: string;
 }
 
-
-// Menu Items
 export const ROUTES: RouteInfo[] = [
     {
         path: '/dashboard',
         title: 'Dashboard',
         type: 'link',
-        icontype: 'dashboard'
+        icontype: 'dashboard',
+        roles: []
     },
     {
         path: '/vouchers',
@@ -34,6 +34,7 @@ export const ROUTES: RouteInfo[] = [
         type: 'sub',
         icontype: 'credit_score',
         collapse: 'vouchers',
+        roles: [],
         children: [
             {path: 'cluster', title: 'Voucher Clusters', ab: 'VC'},
             {path: 'batch', title: 'Voucher Batches', ab: 'VB'},
@@ -46,6 +47,7 @@ export const ROUTES: RouteInfo[] = [
         type: 'sub',
         icontype: 'business',
         collapse: 'providers',
+        roles: [],
         children: [
             {path: 'provider', title: 'Providers', ab: 'P'},
             {path: 'category', title: 'Provider Categories', ab: 'PC'},
@@ -58,6 +60,7 @@ export const ROUTES: RouteInfo[] = [
         type: 'sub',
         icontype: 'people',
         collapse: 'users',
+        roles: [],
         children: [
             {path: 'user', title: 'Users', ab: 'U'},
             {path: 'adminuser', title: 'Admin Users', ab: 'A'},
@@ -68,7 +71,19 @@ export const ROUTES: RouteInfo[] = [
         path: '/organizations/organization',
         title: 'Organizations',
         type: 'link',
-        icontype: 'corporate_fare'
+        icontype: 'corporate_fare',
+        roles: [],
+    },
+    {
+        path: '/kyc',
+        title: 'KYC',
+        type: 'sub',
+        icontype: 'group_add',
+        collapse: 'kyc',
+        roles: ['Onecard_Admin'],
+        children: [
+            {path: 'settings', title: 'Settings', ab: 'S'}
+        ]
     },
     {
         path: '/audit',
@@ -76,6 +91,7 @@ export const ROUTES: RouteInfo[] = [
         type: 'sub',
         icontype: 'person_search',
         collapse: 'audit',
+        roles: [],
         children: [
             {path: 'audit', title: 'Audit', ab: 'A'},
             {path: 'contact', title: 'Contact', ab: 'C'}
@@ -87,6 +103,7 @@ export const ROUTES: RouteInfo[] = [
         type: 'sub',
         icontype: 'grid_off',
         collapse: 'failed',
+        roles: [],
         children: [
             {path: 'single', title: 'All Single', ab: 'A'},
             {path: 'single_unresolved', title: 'Unresolved Single', ab: 'U'},
@@ -105,6 +122,7 @@ export const ROUTES: RouteInfo[] = [
         title: 'Reports',
         type: 'link',
         icontype: 'web-stories',
+        roles: [],
         // icontype: 'summarize',
     }
 ];
@@ -129,7 +147,21 @@ export class SidebarComponent implements OnInit {
             }
         });
 
-        this.menuItems = ROUTES.filter(menuItem => menuItem);
+        const roles = this.keycloak.getUserRoles();
+        this.menuItems = ROUTES.filter(m => {
+            if (m.roles.length === 0) {
+                return true;
+            } else  {
+                for (const el of m.roles) {
+                    if (roles.includes(el)) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        });
+
         if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {
             const elemSidebar = <HTMLElement>document.querySelector('.sidebar .sidebar-wrapper');
             this.ps = new PerfectScrollbar(elemSidebar);

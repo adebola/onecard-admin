@@ -4,6 +4,8 @@ export interface Account {
     userId: string;
     balance: number;
     createdDate: string;
+    kycVerified: boolean;
+    dailyLimit: number;
 }
 
 export interface Transaction {

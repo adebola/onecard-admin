@@ -13,8 +13,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-
-                            <div class="row" *ngIf="editMode">
+                            <div class="row">
                                 <label class="col-sm-2 col-form-label">User Id</label>
                                 <div class="col-sm-10">
                                     <mat-form-field class="example-full-width has-label">
@@ -55,45 +54,71 @@
                             </div>
 
                             <div class="row">
-                                <ng-container *ngIf="editMode">
-                                    <label class="col-sm-2 col-form-label">Created On</label>
-                                    <div class="col-sm-4">
-                                        <mat-form-field class="example-full-width has-label">
-                                            <input type="text" matInput formControlName="createdon" readonly>
-                                        </mat-form-field>
-                                    </div>
-                                </ng-container>
-                                <div class="col-sm-3">
-                                    <mat-checkbox formControlName="enabled" class="mt-3" (change)="onEnabledChange($event)">Enabled</mat-checkbox>
+                                <label class="col-sm-2 col-form-label">Created On</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="createdOn" readonly>
+                                    </mat-form-field>
                                 </div>
-                                <div class="col-sm-3">
-                                    <mat-checkbox formControlName="emailverified" class="mt-3" disabled>E-Mail
+                                <div class="col-sm-2">
+                                    <mat-checkbox formControlName="enabled" class="mt-3"
+                                                  (change)="onEnabledChange($event)">Enabled
+                                    </mat-checkbox>
+                                </div>
+                                <div class="col-sm-2">
+                                    <mat-checkbox formControlName="emailVerified" class="mt-3" disabled>E-Mail
                                         Verified
+                                    </mat-checkbox>
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <mat-checkbox formControlName="kycVerified" class="mt-3" disabled>
+                                        Kyc Verified
                                     </mat-checkbox>
                                 </div>
                             </div>
 
                             <div class="row">
-                                <ng-container *ngIf="editMode">
-                                    <label class="col-sm-2 col-form-label">Account Balance</label>
+                                <label class="col-sm-2 col-form-label">Account Balance</label>
+                                <div class="col-sm-4">
+                                    <mat-form-field class="example-full-width has-label">
+                                        <input type="text" matInput formControlName="balance" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button mat-raised-button class="btn btn-outline-warning text-sm-right"
+                                            type="button" (click)="openBalanceModal()">
+                                        Manage Balance
+                                    </button>
+                                </div>
+                            </div>
+
+<!--                       Test for user before referencing the class to avoid browser errors before-->
+<!--                       the object is actually loaded from the backend, angular will call invoke this -->
+<!--                       a number of times typically before is is loaded from the backend -->
+                            <ng-container *ngIf="user && !user.account.kycVerified">
+                                <div class="row">
+                                    <label class="col-sm-2 col-form-label">Daily Limit</label>
                                     <div class="col-sm-4">
                                         <mat-form-field class="example-full-width has-label">
-                                            <input type="text" matInput formControlName="balance" readonly>
+                                            <input type="text" matInput formControlName="dailyLimit" readonly>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-sm-4">
-                                        <button mat-raised-button class="btn btn-outline-warning text-sm-right" type="button" (click)="openBalanceModal()">
-                                            Manage Balance
+                                        <button mat-raised-button class="btn btn-outline-warning text-sm-right"
+                                                type="button" (click)="openLimitModal()">
+                                            Manage Daily Limit
                                         </button>
                                     </div>
-                                </ng-container>
-                            </div>
+                                </div>
+                            </ng-container>
                         </div>
 
                         <div class="row">
                             <div class="col-4">
                                 <div class="card-footer text-center">
-                                    <button mat-raised-button class="btn btn-warning btn-fill text-sm-right" type="button" (click)="onShowTransaction()">
+                                    <button mat-raised-button class="btn btn-warning btn-fill text-sm-right"
+                                            type="button" (click)="onShowTransaction()">
                                         {{showTransactions ? 'Hide Transactions' : 'Show Transactions'}}
                                     </button>
                                 </div>
@@ -101,7 +126,8 @@
 
                             <div class="col-4">
                                 <div class="card-footer text-center">
-                                    <button mat-raised-button class="btn btn-warning btn-fill text-sm-right" type="button" (click)="onShowRecharges()">
+                                    <button mat-raised-button class="btn btn-warning btn-fill text-sm-right"
+                                            type="button" (click)="onShowRecharges()">
                                         {{showRecharges ? 'Hide Recharges' : 'Show Recharges'}}
                                     </button>
                                 </div>
@@ -109,19 +135,13 @@
 
                             <div class="col-4">
                                 <div class="card-footer text-center">
-                                    <button mat-raised-button class="btn btn-warning btn-fill text-sm-right" type="button" (click)="onShowFunding()">
+                                    <button mat-raised-button class="btn btn-warning btn-fill text-sm-right"
+                                            type="button" (click)="onShowFunding()">
                                         {{showFunding ? 'Hide Funding' : 'Show Funding'}}
                                     </button>
                                 </div>
                             </div>
                         </div>
-
-                        <ng-template #savetemplate>
-                            <div class="card-footer text-center d-flex" style="justify-content: flex-end">
-                                <button mat-raised-button type="submit" class="btn btn-warning btn-fill">Create User
-                                </button>
-                            </div>
-                        </ng-template>
                     </form>
                 </div>
             </div>
@@ -140,14 +160,15 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <mat-table matSort matSortDirection="asc" [dataSource]="datasource" *ngIf="!(datasource.loading$ | async); else loading">
+                            <mat-table matSort matSortDirection="asc" [dataSource]="datasource"
+                                       *ngIf="!(datasource.loading$ | async); else loading">
                                 <ng-container matColumnDef="id">
                                     <mat-header-cell *matHeaderCellDef>TxID</mat-header-cell>
                                     <mat-cell *matCellDef="let transaction">{{transaction.id}}</mat-cell>
                                 </ng-container>
 
                                 <ng-container matColumnDef="date">
-                                    <mat-header-cell mat-header-cell *matHeaderCellDef >TxDate</mat-header-cell>
+                                    <mat-header-cell mat-header-cell *matHeaderCellDef>TxDate</mat-header-cell>
                                     <mat-cell *matCellDef="let transaction">{{transaction.txDate | date}}</mat-cell>
                                 </ng-container>
 
@@ -158,7 +179,8 @@
 
                                 <ng-container matColumnDef="amount">
                                     <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
-                                    <mat-cell *matCellDef="let transaction">{{transaction.txAmount | currency: "₦":"symbol":"1.0-0"}}</mat-cell>
+                                    <mat-cell
+                                            *matCellDef="let transaction">{{transaction.txAmount | currency: "₦":"symbol":"1.0-0"}}</mat-cell>
                                 </ng-container>
                                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                                 <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
@@ -210,13 +232,17 @@
                     <div class="row mx-2">
                         <div class="col-md-1"></div>
                         <div class="col-md-5">
-                            <button mat-raised-button type="button" class="btn btn-warning btn-fill text-sm-right my-3" (click)="addRoles()">
-                                Add Selected <mat-icon> arrow_forward_ios</mat-icon>
+                            <button mat-raised-button type="button" class="btn btn-warning btn-fill text-sm-right my-3"
+                                    (click)="addRoles()">
+                                Add Selected
+                                <mat-icon> arrow_forward_ios</mat-icon>
                             </button>
                         </div>
                         <div class="col-md-5">
-                            <button mat-raised-button type="button" class="btn btn-warning btn-fill text-sm-right my-3" (click)="removeRoles()">
-                                <mat-icon> arrow_back_ios</mat-icon>Remove Selected
+                            <button mat-raised-button type="button" class="btn btn-warning btn-fill text-sm-right my-3"
+                                    (click)="removeRoles()">
+                                <mat-icon> arrow_back_ios</mat-icon>
+                                Remove Selected
                             </button>
                         </div>
                     </div>

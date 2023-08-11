@@ -40,11 +40,18 @@ export class AccountService {
         });
     }
 
+    public updateLimit(id: string, balance: number, narrative: string): Observable<any> {
+        return this.http.put<NewBalanceModel>(ACCOUNT_URL + '/limit/' + id, {
+            balance: balance,
+            narrative: narrative
+        });
+    }
+
     public adjustBalance(id: string, amount: number, narrative: string): Observable<AdjustResponse> {
         return this.http.post<AdjustResponse>(ACCOUNT_URL + '/adjust', {accountId: id, amount, narrative});
     }
 
-    findWalletFundings(userId: string, pageNumber: number, pageSize: number): Observable<Page<WalletFund>> {
+    findWalletFunding(userId: string, pageNumber: number, pageSize: number): Observable<Page<WalletFund>> {
         return this.http.get<Page<WalletFund>>(ACCOUNT_URL + '/wallet/' + userId, {
             params: {
                 pageNumber: pageNumber,

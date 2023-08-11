@@ -48,7 +48,7 @@ export class WalletDatasource implements DataSource<WalletFund> {
             this.subscription.unsubscribe();
         }
 
-        this.accountService.findWalletFundings(id, pageIndex, pageSize).pipe(
+        this.accountService.findWalletFunding(id, pageIndex, pageSize).pipe(
             catchError(() => of(null)),
             finalize(() => this.loadingSubject.next(false))
         ).subscribe(page => {

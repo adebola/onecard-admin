@@ -1,0 +1,75 @@
+<div class="main-content">
+    <div *ngIf="busy" class="loading">
+        <mat-progress-spinner [color]="'warning'" class="loader" mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">group_add</i>
+                        </div>
+                        <h4 class="card-title">KYC Settings</h4>
+                    </div>
+
+
+                    <div *ngIf="(settings$ | async) as settings else loading" class="card-body">
+                        <div class="row mt-2">
+                            <div class="col-sm-4">
+                                <mat-slide-toggle
+                                        [checked]="settings.enabled == '1'"
+                                        (change)="setLimit($event)">Enable Limit Check</mat-slide-toggle>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-sm-2">User Daily Limit ₦</div>
+                            <div class="col-sm-4">
+                                <input class="form-control" matInput type="number" [value]="settings.userLimit" #user>
+                            </div>
+
+                            <div class="col-sm-2">Corporate Daily Limit ₦</div>
+                            <div class="col-sm-4">
+                                <input class="form-control" matInput type="number" [value]="settings.corporateLimit" #corporate>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-9">
+                                <div class="row mt-3">
+                                    <div class="col-sm-4">
+                                        <mat-slide-toggle [checked]="settings.firstName == '1'"
+                                                          (change)="setFirstName($event)">BVN FirstName Comparison</mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-sm-4">
+                                        <mat-slide-toggle [checked]="settings.lastName == '1'"
+                                                          (change)="setLastName($event)">BVN LastName Comparison</mat-slide-toggle>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-sm-4">
+                                        <mat-slide-toggle [checked]="settings.telephone == '1'"
+                                                          (change)="setTelephone($event)">BVN Telephone Number Comparison</mat-slide-toggle>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <button mat-raised-button (click)="saveLimits()" class="btn btn-warning btn-fill text-sm-right">Save Limits</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ng-template #loading>
+                        Loading...
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

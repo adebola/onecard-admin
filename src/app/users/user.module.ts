@@ -16,6 +16,7 @@ import {RetryModalComponent} from './modals/retry/retry-modal.component';
 import {ResolveModalComponent} from './modals/resolve/resolve-modal.component';
 import {BalanceModalComponent} from './modals/balance/balance-modal.component';
 import {CombinedRechargeComponent} from './recharges/combined/combined-recharge.component';
+import {DailyLimitModalComponent} from './modals/daily-limit/daily-limit-modal.component';
 
 @NgModule({
     imports: [
@@ -42,6 +43,7 @@ import {CombinedRechargeComponent} from './recharges/combined/combined-recharge.
         RetryModalComponent,
         ResolveModalComponent,
         BalanceModalComponent,
+        DailyLimitModalComponent,
         CombinedRechargeComponent
     ]
 })

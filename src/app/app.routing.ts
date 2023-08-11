@@ -39,6 +39,10 @@ export const AppRoutes: Routes = [
               loadChildren: () => import('./audit/audit.module').then(m => m.AuditModule), canActivate: [AuthGuard]
           },
           {
+              path: 'kyc',
+              loadChildren: () => import('./kyc/kyc.module').then(m => m.KycModule), canActivate: [AuthGuard]
+          },
+          {
               path: 'reports',
               loadChildren: () => import('./reports/report.module').then(m => m.ReportModule), canActivate: [AuthGuard]
           },

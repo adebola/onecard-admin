@@ -17,6 +17,7 @@ import {Role} from '../../shared/model/role.model';
 import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 import {BalanceModalComponent} from '../modals/balance/balance-modal.component';
 import {MatCheckboxChange} from '@angular/material/checkbox';
+import {DailyLimitModalComponent} from '../modals/daily-limit/daily-limit-modal.component';
 
 @Component({
     selector: 'app-user-form',
@@ -25,7 +26,6 @@ import {MatCheckboxChange} from '@angular/material/checkbox';
 })
 export class UserFormComponent implements OnInit, OnDestroy {
     public busy = false;
-    public editMode = false;
     public id: string = null;
     public userForm: FormGroup;
     private subscription: Subscription;
@@ -56,11 +56,16 @@ export class UserFormComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private userService: UserService,
                 private accountService: AccountService,
-                private notificationService: NotificationService) {}
+                private notificationService: NotificationService) {
+    }
 
     ngOnDestroy(): void {
-        if (this.subscription) { this.subscription.unsubscribe(); }
-        if (this.activateSubscription) { this.activateSubscription.unsubscribe(); }
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+        if (this.activateSubscription) {
+            this.activateSubscription.unsubscribe();
+        }
 
         this.allRolesSubject.complete();
         this.assignedRolesSubject.complete();
@@ -84,27 +89,23 @@ export class UserFormComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.id = this.route.snapshot.paramMap.get('id');
         this.initRoles();
-        this.editMode = !!this.id;
         this.createForm();
     }
 
     private createForm() {
-
-        if (this.editMode) {
-            this.userForm = this.fb.group({
-                userId: [null],
-                createdon: [null],
-                enabled: [null],
-                emailverified: [null],
-                firstname: [null, Validators.required],
-                lastname: [null, Validators.required],
-                username: [null, Validators.required],
-                email: [null, Validators.required],
-                balance: [null]
-            });
-        }
-
-
+        this.userForm = this.fb.group({
+            userId: [null],
+            createdOn: [null],
+            enabled: [null],
+            dailyLimit: [null],
+            kycVerified: [null],
+            emailVerified: [null],
+            firstname: [null, Validators.required],
+            lastname: [null, Validators.required],
+            username: [null, Validators.required],
+            email: [null, Validators.required],
+            balance: [null]
+        });
 
         this.subscription = this.userService.findUserById(this.id).pipe(
             catchError(err => {
@@ -125,15 +126,22 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
             this.userForm.patchValue({
                 userId: user.id,
-                createdon: this.datePipe.transform(new Date(user.createdDate), 'mediumDate'),
+                createdOn: this.datePipe.transform(new Date(user.createdDate), 'mediumDate'),
                 enabled: user.enabled,
-                emailverified: user.emailVerified,
+                emailVerified: user.emailVerified,
+                kycVerified: user.account.kycVerified,
                 firstname: user.firstName,
                 lastname: user.lastName,
                 username: user.username,
                 email: user.email,
                 balance: formatter.format(user.account?.balance)
             });
+
+            if (!user.account.kycVerified) {
+                this.userForm.patchValue({
+                    dailyLimit: formatter.format(user.account?.dailyLimit),
+                });
+            }
         });
     }
 
@@ -150,15 +158,13 @@ export class UserFormComponent implements OnInit, OnDestroy {
         const firstName = form.controls.firstname.touched ? form.value.firstname : null;
         const lastName = form.controls.lastname.touched ? form.value.lastname : null;
 
-        if (this.editMode) {
-            this.subscription = this.userService.updateUser(this.id, {
-                enabled: enabled,
-                firstName: firstName,
-                lastName: lastName
-            }).pipe(
-                catchError(err => this.handleError(err)),
-            ).subscribe((b) => this.handleSuccess(b));
-        }
+        this.subscription = this.userService.updateUser(this.id, {
+            enabled: enabled,
+            firstName: firstName,
+            lastName: lastName
+        }).pipe(
+            catchError(err => this.handleError(err)),
+        ).subscribe((b) => this.handleSuccess(b));
     }
 
     addRoles() {
@@ -240,11 +246,20 @@ export class UserFormComponent implements OnInit, OnDestroy {
         return this.matDialog.open(BalanceModalComponent, dialogConfig);
     }
 
+    private getLimitModal(id: string): MatDialogRef<DailyLimitModalComponent> {
+        const dialogConfig = new MatDialogConfig();
+
+        dialogConfig.disableClose = true;
+        dialogConfig.id = 'modal-dialog';
+        dialogConfig.height = '400px';
+        dialogConfig.width = '550px';
+        dialogConfig.data = {id: id};
+        return this.matDialog.open(DailyLimitModalComponent, dialogConfig);
+    }
+
     openBalanceModal() {
         this.getBalanceModal(this.user.account.id).afterClosed().subscribe((result) => {
             if (result !== 'cancel') {
-                console.log('submit selected');
-
                 const formatter = new Intl.NumberFormat('en-NG', {
                     style: 'currency',
                     currency: 'NGN',
@@ -257,8 +272,26 @@ export class UserFormComponent implements OnInit, OnDestroy {
         });
     }
 
+    openLimitModal() {
+        this.getLimitModal(this.user.account.id).afterClosed().subscribe((result) => {
+            if (result !== 'cancel') {
+                const formatter = new Intl.NumberFormat('en-NG', {
+                    style: 'currency',
+                    currency: 'NGN',
+                });
+
+                this.userForm.patchValue({
+                    dailyLimit: formatter.format(result)
+                });
+            }
+        });
+
+    }
+
     onEnabledChange($event: MatCheckboxChange) {
-        if (this.activateSubscription) { this.activateSubscription.unsubscribe(); }
+        if (this.activateSubscription) {
+            this.activateSubscription.unsubscribe();
+        }
         this.activateSubscription = this.userService.toggleUserActivation(this.id).subscribe();
     }
 }
