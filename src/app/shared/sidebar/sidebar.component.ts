@@ -28,19 +28,19 @@ export const ROUTES: RouteInfo[] = [
         icontype: 'dashboard',
         roles: []
     },
-    {
-        path: '/vouchers',
-        title: 'Vouchers',
-        type: 'sub',
-        icontype: 'credit_score',
-        collapse: 'vouchers',
-        roles: [],
-        children: [
-            {path: 'cluster', title: 'Voucher Clusters', ab: 'VC'},
-            {path: 'batch', title: 'Voucher Batches', ab: 'VB'},
-            {path: 'voucher', title: 'Vouchers', ab: 'V'},
-        ]
-    },
+    // {
+    //     path: '/vouchers',
+    //     title: 'Vouchers',
+    //     type: 'sub',
+    //     icontype: 'credit_score',
+    //     collapse: 'vouchers',
+    //     roles: [],
+    //     children: [
+    //         {path: 'cluster', title: 'Voucher Clusters', ab: 'VC'},
+    //         {path: 'batch', title: 'Voucher Batches', ab: 'VB'},
+    //         {path: 'voucher', title: 'Vouchers', ab: 'V'},
+    //     ]
+    // },
     {
         path: '/providers',
         title: 'Providers',

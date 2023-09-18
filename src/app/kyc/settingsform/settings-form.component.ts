@@ -51,7 +51,7 @@ export class SettingsFormComponent implements OnInit, OnDestroy {
         }
 
         this.subscription = this.kycService.updateKycSettings({
-            enabled: $event.checked ? '1' : '0'
+            enable: $event.checked ? '1' : '0'
         }).pipe(
             catchError(err => this.handleError(err)),
             finalize(() => this.busy = false)

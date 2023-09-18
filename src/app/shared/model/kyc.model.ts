@@ -1,7 +1,7 @@
 export interface KycSettings {
     userLimit: number;
     corporateLimit: number;
-    enabled: string;
+    enable: string;
     firstName: string;
     lastName: string;
     telephone: string;
